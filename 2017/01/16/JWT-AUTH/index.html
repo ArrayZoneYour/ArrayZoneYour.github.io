@@ -1,0 +1,691 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Laravel,Angular," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="基本配置当你使用composer create-project来安装时，下面的命令也将执行php artisan jwt:generate它将生成JWT运行所需的JWT_SECRET  
+JSON Web Token是无状态的，这也是为什么我们从不把它储存在数据库的原因
+JWT认证的样本代码在LoginController中有提供你的API知道，如果用户发送了Authorization: Bear">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel-Angular-Material中文文档——JWT AUTH">
+<meta property="og:url" content="https://arrayzoneyour.github.io/2017/01/16/JWT-AUTH/index.html">
+<meta property="og:site_name" content="ArrayZoneYour">
+<meta property="og:description" content="基本配置当你使用composer create-project来安装时，下面的命令也将执行php artisan jwt:generate它将生成JWT运行所需的JWT_SECRET  
+JSON Web Token是无状态的，这也是为什么我们从不把它储存在数据库的原因
+JWT认证的样本代码在LoginController中有提供你的API知道，如果用户发送了Authorization: Bear">
+<meta property="og:image" content="https://files.readme.io/NsKdOEzjRmKncNS6JN9g_Screen%20Shot%202016-04-21%20at%2012.48.07%20AM.png">
+<meta property="og:image" content="https://files.readme.io/l5vRJ9UDRvyrZ4oxwf4z_Screen%20Shot%202016-04-21%20at%2012.48.21%20AM.png">
+<meta property="og:image" content="https://files.readme.io/JeTq2IfRZe7hrEEGyPxD_Screen%20Shot%202016-04-21%20at%202.28.19%20AM.png">
+<meta property="og:image" content="https://files.readme.io/qI8pUzE1SFCTsQu5op4S_Screen%20Shot%202016-04-21%20at%202.29.32%20AM.png">
+<meta property="og:updated_time" content="2018-02-17T08:07:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel-Angular-Material中文文档——JWT AUTH">
+<meta name="twitter:description" content="基本配置当你使用composer create-project来安装时，下面的命令也将执行php artisan jwt:generate它将生成JWT运行所需的JWT_SECRET  
+JSON Web Token是无状态的，这也是为什么我们从不把它储存在数据库的原因
+JWT认证的样本代码在LoginController中有提供你的API知道，如果用户发送了Authorization: Bear">
+<meta name="twitter:image" content="https://files.readme.io/NsKdOEzjRmKncNS6JN9g_Screen%20Shot%202016-04-21%20at%2012.48.07%20AM.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6269340096407799000',
+      author: 'ArrayZoneYour'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://arrayzoneyour.github.io/2017/01/16/JWT-AUTH/"/>
+
+
+  <title> Laravel-Angular-Material中文文档——JWT AUTH | ArrayZoneYour </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">ArrayZoneYour</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">自由自在，无忧无虑的小天地</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Laravel-Angular-Material中文文档——JWT AUTH
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-16T15:40:32+08:00" content="2017-01-16">
+              2017-01-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Laravel-Angular-Material中文文档/" itemprop="url" rel="index">
+                    <span itemprop="name">Laravel-Angular-Material中文文档</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/16/JWT-AUTH/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/16/JWT-AUTH/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h2><p>当你使用<code>composer create-project</code>来安装时，下面的命令也将执行<br><code>php artisan jwt:generate</code><br>它将生成JWT运行所需的<code>JWT_SECRET</code>  </p>
+<p>JSON Web Token是无状态的，这也是为什么我们从不把它储存在数据库的原因</p>
+<p>JWT认证的样本代码在<code>LoginController</code>中有提供<br>你的API知道，如果用户发送了<code>Authorization: Bearer {token}</code>的头，这个用户是经过验证的。<br>这已经在API Service中为你自动配置</p>
+<blockquote>
+<p>推荐你将<code>config/jwt</code>中生成的token移至<code>.env</code>中，这个问题将在下一个版本中修复</p>
+<p>如果你想修改默认的验证模型，确保你更新了<code>config/jwt.php</code>中的内容来匹配你做的改动。特别是你想要更新<code>user</code> &amp; <code>identifier</code>的时候。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="认证路由"><a href="#认证路由" class="headerlink" title="认证路由"></a>认证路由</h2><p>参考上一章中的JWT Authenticated routes部分</p>
+<h2 id="多租户"><a href="#多租户" class="headerlink" title="多租户"></a>多租户</h2><p>应用中往往需要多个用户角色，对于这种问题你可以创建两个路由组(比方说老师和学生)</p>
+<ul>
+<li>一个只允许学生（验证用户的学生身份）</li>
+<li>一个只允许老师（验证用户的教师身份）<br>为他们各自创建一个中间件<br>当然，也可以创建一个带参数的中间件  </li>
+</ul>
+<p><strong>PHP</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">TeacherAuthMiddleware</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">($request, Closure $next)</span></span></div><div class="line">    &#123;</div><div class="line">        $user = \Auth::user();</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (!$user || $user-&gt;type !== <span class="string">'teacher'</span>) &#123;</div><div class="line">            <span class="keyword">return</span> response()-&gt;error(<span class="string">'Not Authorized'</span>, <span class="number">401</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> $next($request);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>PHP</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">StudentAuthMiddleware</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Handle an incoming request.</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</div><div class="line">     * <span class="doctag">@param</span>  \Closure  $next</div><div class="line">     * <span class="doctag">@return</span> mixed</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span><span class="params">($request, Closure $next)</span></span></div><div class="line">    &#123;</div><div class="line">        $user = \Auth::user();</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (!$user || $user-&gt;type !== <span class="string">'student'</span>) &#123;</div><div class="line">            <span class="keyword">return</span> response()-&gt;error(<span class="string">'Not Authorized'</span>, <span class="number">401</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> $next($request);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不要忘记将这些中间件添加至你的Http Kerenal中<br>接下来，你可以在<strong>routes.php</strong>中使用它们  </p>
+<p><strong>PHP</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="comment">//Public endpoints</span></div><div class="line">$api-&gt;group([], <span class="function"><span class="keyword">function</span> <span class="params">($api)</span> </span>&#123;</div><div class="line">  </div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">//Protected endpoints (Mentor or Mentee)</span></div><div class="line">$api-&gt;group([<span class="string">'middleware'</span> =&gt; <span class="string">'api.auth'</span>], <span class="function"><span class="keyword">function</span> <span class="params">($api)</span> </span>&#123;</div><div class="line">  </div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">//Protected: Teacher only</span></div><div class="line">$api-&gt;group([<span class="string">'middleware'</span> =&gt; [<span class="string">'api.auth'</span>, <span class="string">'auth.teacher'</span>]], <span class="function"><span class="keyword">function</span> <span class="params">($api)</span> </span>&#123;</div><div class="line">  </div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">//Protected: Student only</span></div><div class="line">$api-&gt;group([<span class="string">'middleware'</span> =&gt; [<span class="string">'api.auth'</span>, <span class="string">'auth.student'</span>]], <span class="function"><span class="keyword">function</span> <span class="params">($api)</span> </span>&#123;</div><div class="line">  </div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>参考下一章节中的JWT Auth Test部分</p>
+<h2 id="注册-amp-登录"><a href="#注册-amp-登录" class="headerlink" title="注册 &amp; 登录"></a>注册 &amp; 登录</h2><h3 id="Satelizer"><a href="#Satelizer" class="headerlink" title="Satelizer"></a>Satelizer</h3><p>Laravel &amp; Angular material starter引入了<a href="https://github.com/sahat/satellizer" target="_blank" rel="external">satellizer</a>来管理token<br>你可以在<code>angular/config/satellizer.config.js</code>中自定制satellizer的配置</p>
+<h3 id="注册功能"><a href="#注册功能" class="headerlink" title="注册功能"></a>注册功能</h3><p><img src="https://files.readme.io/NsKdOEzjRmKncNS6JN9g_Screen%20Shot%202016-04-21%20at%2012.48.07%20AM.png" alt="注册图片"><br>注册功能是预置的功能<br><code>/register</code>路由的配置文件为<code>routes.config.js</code><br>你有一个包括<code>register-form</code>组件的页面文件<code>register.page.html</code><br><code>register-form</code>组件通过使用satellizer和<code>Auth\AuthController.php</code>文件来实现用户注册功能<br>如果你想添加新的字段，那么你应该同时编辑view，component和AuthController  </p>
+<h3 id="登录功能"><a href="#登录功能" class="headerlink" title="登录功能"></a>登录功能</h3><p><img src="https://files.readme.io/l5vRJ9UDRvyrZ4oxwf4z_Screen%20Shot%202016-04-21%20at%2012.48.21%20AM.png" alt="登录图片"><br>登录功能也是预置功能。<br>登录的路由<code>/login</code>是在<code>route.config.js</code>中配置的。<br>在<code>login.page.html</code>中包含着<code>login-form</code>组件。<br><code>login-form</code>组件通过使用satellizer和<code>Auth\AuthController.php</code>实现用户的认证功能<br>我们可以在<code>Auth\AuthController.php</code>中检验登录功能的逻辑</p>
+<h2 id="重置密码"><a href="#重置密码" class="headerlink" title="重置密码"></a>重置密码</h2><h3 id="忘记密码"><a href="#忘记密码" class="headerlink" title="忘记密码"></a>忘记密码</h3><p><img src="https://files.readme.io/JeTq2IfRZe7hrEEGyPxD_Screen%20Shot%202016-04-21%20at%202.28.19%20AM.png" alt="忘记密码"><br>忘记密码功能是预置的。<br>忘记密码的路由<code>/forget-password</code>的配置文件被配置在<code>routes.config.js</code>中<br><code>forget_password.page.html</code>中包含着<code>forget-password</code>组件  </p>
+<p>这个组件会发送一个带有重置密码链接的电子邮件。<br>你可以在<code>Auth\PasswordResetController.php</code>文件中检查它的逻辑  </p>
+<blockquote>
+<p>重置链接<br>默认的链接前缀是<code>localhost:8000</code>，你需要在<code>.env</code>增加对应的变量并合理地管理它。  </p>
+<p>Email的发送地址<br>在使用这一新特性之前，你需要替换<code>Auth\PasswordResetController.php</code>为你自己使用的邮箱名</p>
+</blockquote>
+<h3 id="重置密码-1"><a href="#重置密码-1" class="headerlink" title="重置密码"></a>重置密码</h3><p><img src="https://files.readme.io/qI8pUzE1SFCTsQu5op4S_Screen%20Shot%202016-04-21%20at%202.29.32%20AM.png" alt=""><br>点击邮件中的重置密码链接会转到<code>/reset-password/:email/:token</code>的路由<br>当加载图案旋转时，<code>reset-password</code>组件将会立刻检测token的有效性<br>一旦数据库验证通过，重置密码的表单就会出现，提交表单就可以成功重置密码了。  </p>
+<h2 id="验证路由（前端）"><a href="#验证路由（前端）" class="headerlink" title="验证路由（前端）"></a>验证路由（前端）</h2><p>如果你打开<code>angular/config/routes.config.js</code>文件，你会注意到我们有一个空的参数<code>data: {}</code>，每个state都继承了这一属性因为它在抽象路由<code>app</code>被定义。<br>尽管这是一个可选的参数，我们可以在<code>angular/run/routes.run.js</code>中自定义我们自己所需的逻辑，然后通过检查<code>data</code>对象中的值并据此完成认证逻辑。<br>如果你设置成下面的样子  </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">data: &#123;</div><div class="line">	<span class="attr">auth</span>: <span class="literal">true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这些路由就会被保护起来（他们需要认证权限）<br>这一行为可以在单独的路由中启用，也可以通过创建抽象的路由来定义一个路由群组来启用。<br>我们通过设置一个字符串值来继承这一行为，比如<code>auth: &#39;admin&#39;</code>，然后你可以在<code>routes.run.js</code>中定义你自己的逻辑</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>您的打赏是对我最大的鼓励！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://oj3kr01vo.bkt.clouddn.com/wechat_pay_github.jpg" alt="ArrayZoneYour WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://oj3kr01vo.bkt.clouddn.com/ali_pay_github.jpg" alt="ArrayZoneYour Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Laravel/" rel="tag">#Laravel</a>
+          
+            <a href="/tags/Angular/" rel="tag">#Angular</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/16/REST-API/" rel="next" title="Laravel-Angular-Material中文文档——REST API">
+                <i class="fa fa-chevron-left"></i> Laravel-Angular-Material中文文档——REST API
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/16/测试/" rel="prev" title="Laravel-Angular-Material中文文档——测试">
+                Laravel-Angular-Material中文文档——测试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/01/16/JWT-AUTH/"
+           data-title="Laravel-Angular-Material中文文档——JWT AUTH" data-url="https://arrayzoneyour.github.io/2017/01/16/JWT-AUTH/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ArrayZoneYour" />
+          <p class="site-author-name" itemprop="name">ArrayZoneYour</p>
+          <p class="site-description motion-element" itemprop="description">奇妙的事情每天都在发生</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本配置"><span class="nav-number">1.</span> <span class="nav-text">基本配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#认证路由"><span class="nav-number">2.</span> <span class="nav-text">认证路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多租户"><span class="nav-number">3.</span> <span class="nav-text">多租户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">4.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注册-amp-登录"><span class="nav-number">5.</span> <span class="nav-text">注册 & 登录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Satelizer"><span class="nav-number">5.1.</span> <span class="nav-text">Satelizer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注册功能"><span class="nav-number">5.2.</span> <span class="nav-text">注册功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#登录功能"><span class="nav-number">5.3.</span> <span class="nav-text">登录功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重置密码"><span class="nav-number">6.</span> <span class="nav-text">重置密码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#忘记密码"><span class="nav-number">6.1.</span> <span class="nav-text">忘记密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重置密码-1"><span class="nav-number">6.2.</span> <span class="nav-text">重置密码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#验证路由（前端）"><span class="nav-number">7.</span> <span class="nav-text">验证路由（前端）</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ArrayZoneYour</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ArrayZoneYour"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

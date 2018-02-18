@@ -1,0 +1,721 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="深度学习,学习率," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="到目前为止，训练神经网络和大型的深度学习网络是一个困难的优化问题。
+随机梯度下降在神经网络的训练中是一个很经典的算法。随机梯度下降和学习率一起决定着神经网络中权重的更新，为了同时保证训练速度和收敛范围，目前最常用的方法就是动态衰减神经网络的学习率（可以保持固定的Batch Size，对训练机器显存的利用和规划有利）。
+在本文中，我们使用Python的Keras进行实验，尝试两种不同的学习率衰减方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在深度学习模型中使用学习率调度器">
+<meta property="og:url" content="https://arrayzoneyour.github.io/2018/02/17/在深度学习模型中使用学习率调度器/index.html">
+<meta property="og:site_name" content="ArrayZoneYour">
+<meta property="og:description" content="到目前为止，训练神经网络和大型的深度学习网络是一个困难的优化问题。
+随机梯度下降在神经网络的训练中是一个很经典的算法。随机梯度下降和学习率一起决定着神经网络中权重的更新，为了同时保证训练速度和收敛范围，目前最常用的方法就是动态衰减神经网络的学习率（可以保持固定的Batch Size，对训练机器显存的利用和规划有利）。
+在本文中，我们使用Python的Keras进行实验，尝试两种不同的学习率衰减方法">
+<meta property="og:image" content="https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2016/05/Time-Based-Learning-Rate-Schedule.png">
+<meta property="og:image" content="https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2016/05/Drop-Based-Learning-Rate-Schedule.png">
+<meta property="og:updated_time" content="2018-02-17T10:10:02.560Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在深度学习模型中使用学习率调度器">
+<meta name="twitter:description" content="到目前为止，训练神经网络和大型的深度学习网络是一个困难的优化问题。
+随机梯度下降在神经网络的训练中是一个很经典的算法。随机梯度下降和学习率一起决定着神经网络中权重的更新，为了同时保证训练速度和收敛范围，目前最常用的方法就是动态衰减神经网络的学习率（可以保持固定的Batch Size，对训练机器显存的利用和规划有利）。
+在本文中，我们使用Python的Keras进行实验，尝试两种不同的学习率衰减方法">
+<meta name="twitter:image" content="https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2016/05/Time-Based-Learning-Rate-Schedule.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6269340096407799000',
+      author: 'ArrayZoneYour'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://arrayzoneyour.github.io/2018/02/17/在深度学习模型中使用学习率调度器/"/>
+
+
+  <title> 在深度学习模型中使用学习率调度器 | ArrayZoneYour </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">ArrayZoneYour</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">自由自在，无忧无虑的小天地</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                在深度学习模型中使用学习率调度器
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-02-17T18:08:00+08:00" content="2018-02-17">
+              2018-02-17
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/02/17/在深度学习模型中使用学习率调度器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/02/17/在深度学习模型中使用学习率调度器/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>到目前为止，训练神经网络和大型的深度学习网络是一个困难的优化问题。</p>
+<p>随机梯度下降在神经网络的训练中是一个很经典的算法。随机梯度下降和学习率一起决定着神经网络中权重的更新，为了同时保证训练速度和收敛范围，目前最常用的方法就是动态衰减神经网络的学习率（可以保持固定的Batch Size，对训练机器显存的利用和规划有利）。</p>
+<p>在本文中，我们使用Python的Keras进行实验，尝试两种不同的学习率衰减方法来训练我们的神经网络模型。</p>
+<p>本文解决的主要问题：</p>
+<ul>
+<li>如何配置和评估连续衰减的学习率规划器。</li>
+<li>如何配置和评估阶梯式衰减的的学习率规划器。</li>
+</ul>
+<p>让我们开始吧。</p>
+<ul>
+<li>作者代码运行环境：Keras 2.0.2，TensorFlow 1.0.1，Theano 0.9.0。</li>
+</ul>
+<h2 id="模型训练中的学习率规划器"><a href="#模型训练中的学习率规划器" class="headerlink" title="模型训练中的学习率规划器"></a>模型训练中的学习率规划器</h2><p>在使用梯度下降算法的机器学习模型中，相比恒定的学习率，使用自适应的学习率可以提升模型的性能，缩短训练时间。</p>
+<p>由此，学习率规划器也被称为学习率的模拟退火，自适应学习率。在本文中统一称为学习率规划器。在每批次的训练结束后，默认情况下学习率规划器将使用相同的学习率更新权重。</p>
+<p>在训练过程中，最简单的调整学习率的方法就是让学习率随着时间的推移而不断衰减。在训练开始时，我们通常使用较大的学习率来让模型快速达到较好的性能，随后通过衰减学习率使模型权重更好地逼近最优的配置。</p>
+<p>这就是学习率规划器可以达到更快的速度和更优的性能的原因。</p>
+<p>下面我们将细致探讨两个易于使用的学习率规划器：</p>
+<ul>
+<li>学习率随训练批次连续衰减。</li>
+<li>学习率在特定的批次衰减，即阶梯式衰减学习率。</li>
+</ul>
+<p>让我们使用Keras分别尝试实现一下这两种规划器。</p>
+<h2 id="连续衰减的学习率规划器"><a href="#连续衰减的学习率规划器" class="headerlink" title="连续衰减的学习率规划器"></a>连续衰减的学习率规划器</h2><p>Keras内置的学习率规划器就是随训练批次连续衰减的。</p>
+<p>在Keras的SGD类实现了随机梯度下降算法，在调用它时可以手动指定衰减系数<code>decay</code>，它的学习率规划器关于decay的数学表达式如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LearningRate = LearningRate / (<span class="number">1</span> + decay * epoch)</div></pre></td></tr></table></figure>
+<p>默认情况下，decay的值为0，学习率在训练过程中为常数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">LearningRate = <span class="number">0.1</span> * <span class="number">1</span>/(<span class="number">1</span> + <span class="number">0.0</span> * <span class="number">1</span>)</div><div class="line">LearningRate = <span class="number">0.1</span></div></pre></td></tr></table></figure>
+<p>在指定学习率之后，随着训练批次数的增加学习率会逐渐下降。</p>
+<p>我们尝试设定初始学习率为0.1，衰减系数为0.001，得到前五个训练批次的学习率：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Epoch    Learning Rate</div><div class="line"><span class="number">1</span>    <span class="number">0.1</span></div><div class="line"><span class="number">2</span>    <span class="number">0.0999000999</span></div><div class="line"><span class="number">3</span>    <span class="number">0.0997006985</span></div><div class="line"><span class="number">4</span>    <span class="number">0.09940249103</span></div><div class="line"><span class="number">5</span>    <span class="number">0.09900646517</span></div></pre></td></tr></table></figure>
+<p>我们将训练批次从1到100对应的学习率用曲线绘制出来：</p>
+<p><img src="https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2016/05/Time-Based-Learning-Rate-Schedule.png" alt="连续衰减的学习率规划器"></p>
+<p>在设置衰减常数时，下面的公式可以作为参考，通常可以达到不错的效果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Decay = LearningRate / Epochs</div><div class="line">Decay = <span class="number">0.1</span> / <span class="number">100</span></div><div class="line">Decay = <span class="number">0.001</span></div></pre></td></tr></table></figure>
+<p>下面我们将演示如何在Keras中使用连续衰减的学习率规划器。</p>
+<p>我们将以一个物理场景下的二分类问题<a href="http://archive.ics.uci.edu/ml/datasets/Ionosphere" target="_blank" rel="external">（点击查看详情）</a><a href="http://archive.ics.uci.edu/ml/machine-learning-databases/ionosphere/ionosphere.data" target="_blank" rel="external">（点击下载数据集）</a>为例来测试我们的学习率规划器。下载到你为本文准备的工程目录后将文件名重命名为<em>ionosphere.csv</em>。</p>
+<p>我选用这个数据集训练神经网络的原因是它的所有输入值都是小的数值量而且使用的物理单位相同，因此我们不需要再做特征的缩放。</p>
+<p>我们将针对这个问题构造一个小的神经网络，它只有一个隐含层，共包含34个神经元，我们还使用了线性整流函数（Relu函数）。它的输出层有一个神经元，该神经元使用sigmoid函数来输出0-1的概率值。</p>
+<p>我们设置一个较高的学习率0.1作为初始值，设定训练的批次数（epochs）为50，根据上面的公式计算得到衰减系数为0.1/50=0.002。除此之外，在使用自适应的学习速率时，引入动量系数（可以在两次梯度下降方向相同时加速下降的速度从而更快达到收敛）也是一个不错的选择，在本例中选取0.8为动量系数。</p>
+<p>下面给出实验所需的完整代码。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 连续衰减的学习率规划器实验代码</span></div><div class="line"><span class="keyword">from</span> pandas <span class="keyword">import</span> read_csv</div><div class="line"><span class="keyword">import</span> numpy</div><div class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> Sequential</div><div class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Dense</div><div class="line"><span class="keyword">from</span> keras.optimizers <span class="keyword">import</span> SGD</div><div class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> LabelEncode</div><div class="line"><span class="comment"># fix random seed for reproducibility</span></div><div class="line">seed = <span class="number">7</span></div><div class="line">numpy.random.seed(seed)</div><div class="line"><span class="comment"># load dataset</span></div><div class="line">dataframe = read_csv(<span class="string">"ionosphere.csv"</span>, header=<span class="keyword">None</span>)</div><div class="line">dataset = dataframe.values</div><div class="line"><span class="comment"># split into input (X) and output (Y) variables</span></div><div class="line">X = dataset[:,<span class="number">0</span>:<span class="number">34</span>].astype(float)</div><div class="line">Y = dataset[:,<span class="number">34</span>]</div><div class="line"><span class="comment"># encode class values as integers</span></div><div class="line">encoder = LabelEncoder()</div><div class="line">encoder.fit(Y)</div><div class="line">Y = encoder.transform(Y)</div><div class="line"><span class="comment"># create model</span></div><div class="line">model = Sequential()</div><div class="line">model.add(Dense(<span class="number">34</span>, input_dim=<span class="number">34</span>, kernel_initializer=<span class="string">'normal'</span>, activation=<span class="string">'relu'</span>))</div><div class="line">model.add(Dense(<span class="number">1</span>, kernel_initializer=<span class="string">'normal'</span>, activation=<span class="string">'sigmoid'</span>))</div><div class="line"><span class="comment"># Compile model</span></div><div class="line">epochs = <span class="number">50</span></div><div class="line">learning_rate = <span class="number">0.1</span></div><div class="line">decay_rate = learning_rate / epochs</div><div class="line">momentum = <span class="number">0.8</span></div><div class="line">sgd = SGD(lr=learning_rate, momentum=momentum, decay=decay_rate, nesterov=<span class="keyword">False</span>)</div><div class="line">model.compile(loss=<span class="string">'binary_crossentropy'</span>, optimizer=sgd, metrics=[<span class="string">'accuracy'</span>])</div><div class="line"><span class="comment"># Fit the model</span></div><div class="line">model.fit(X, Y, validation_split=<span class="number">0.33</span>, epochs=epochs, batch_size=<span class="number">28</span>, verbose=<span class="number">2</span>)</div></pre></td></tr></table></figure>
+<p>该模型使用数据集中的67%作为训练集，33%作为测试集。</p>
+<p>运行示例显示的分类准确率为99.14％。这比没有学习率衰减和动量为0时的95.69％的性能底线要高。</p>
+<p>注：译者运行代码发现有无学习率衰减在本例中影响并不明显，在原作者的例子中甚至无学习率衰减的模型性能还要好一点，更多体现在后期准确率的稳定上，将正确率随epochs的曲线绘制出来发现有学习率衰减的模型在epochs较大时损失值和正确率曲线更为平滑，毛刺较少，即稳定性较高，译者选取了四个实验组，参数：learning_rate = 0.2, epochs = 300, decay_rate = 0 或 learning_rate / epochs, momentum = 0.8 或 0，关于如何绘制可以参考我之前的译文 <a href="https://cloud.tencent.com/developer/article/1034630" target="_blank" rel="external">使用Keras在训练深度学习模型时监控性能指标
+</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">Epoch <span class="number">45</span>/<span class="number">50</span></div><div class="line"><span class="number">0</span>s - loss: <span class="number">0.0622</span> - acc: <span class="number">0.9830</span> - val_loss: <span class="number">0.0929</span> - val_acc: <span class="number">0.9914</span></div><div class="line">Epoch <span class="number">46</span>/<span class="number">50</span></div><div class="line"><span class="number">0</span>s - loss: <span class="number">0.0695</span> - acc: <span class="number">0.9830</span> - val_loss: <span class="number">0.0693</span> - val_acc: <span class="number">0.9828</span></div><div class="line">Epoch <span class="number">47</span>/<span class="number">50</span></div><div class="line"><span class="number">0</span>s - loss: <span class="number">0.0669</span> - acc: <span class="number">0.9872</span> - val_loss: <span class="number">0.0616</span> - val_acc: <span class="number">0.9828</span></div><div class="line">Epoch <span class="number">48</span>/<span class="number">50</span></div><div class="line"><span class="number">0</span>s - loss: <span class="number">0.0632</span> - acc: <span class="number">0.9830</span> - val_loss: <span class="number">0.0824</span> - val_acc: <span class="number">0.9914</span></div><div class="line">Epoch <span class="number">49</span>/<span class="number">50</span></div><div class="line"><span class="number">0</span>s - loss: <span class="number">0.0590</span> - acc: <span class="number">0.9830</span> - val_loss: <span class="number">0.0772</span> - val_acc: <span class="number">0.9828</span></div><div class="line">Epoch <span class="number">50</span>/<span class="number">50</span></div><div class="line"><span class="number">0</span>s - loss: <span class="number">0.0592</span> - acc: <span class="number">0.9872</span> - val_loss: <span class="number">0.0639</span> - val_acc: <span class="number">0.9828</span></div></pre></td></tr></table></figure>
+<h2 id="阶梯式衰减的学习率规划器"><a href="#阶梯式衰减的学习率规划器" class="headerlink" title="阶梯式衰减的学习率规划器"></a>阶梯式衰减的学习率规划器</h2><p>在深度学习中另一种被广泛使用的学习率规划器是在特定的epochs降低学习率。</p>
+<p>通常来说这种方法会在指定的epochs的公倍数对应的批次将学习率下调至原来的一半。举例来说，如果我们设置的初始学习率为0.1，衰减周期为10，那么，每过10个epochs学习率就会乘上0.5，前10个epoch学习率为0.1，10-19就会变为0.05，以此类推。</p>
+<p>还是像上面一样绘制至epochs=100时的学习率图像：</p>
+<p><img src="https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2016/05/Drop-Based-Learning-Rate-Schedule.png" alt="阶梯式衰减的学习率规划器"></p>
+<p>在Keras中，我们可以在model.fit()方法中指定<a href="http://keras.io/callbacks/" target="_blank" rel="external">LearningRateScheduler</a>作为回调来实现学习率的梯度下降。</p>
+<p>LearningRateScheduler的回调允许我们自定义一个回调函数来根据epochs返回对应的学习率，输出的学习率将覆盖随机梯度下降类SGD中指定的学习率。</p>
+<p>我们继续使用上面的数据集来进行实验，为了实现阶梯式下降，需要定义一个新的<code>step_decay()</code>函数来实现学习率更新公式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LearningRate = InitialLearningRate * DropRate^floor(Epoch / EpochDrop)</div></pre></td></tr></table></figure>
+<p>其中InitialLearningRate是初始学习速率；DropRate代表对应点学习率衰减为原来的多少倍；Epoch是当前训练批次数；EpochDrop代表多久改变一次学习速率 。</p>
+<p>注意代码中将SGD类中的学习率设置为0的原因是我们设定的LearningRateScheduler回调中的更新公式输出的值会覆盖SGD类设定的学习率。在这个例子中，你也可以尝试加入动量系数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 阶梯式下降的学习率衰减计划器</span></div><div class="line"><span class="keyword">import</span> pandas</div><div class="line"><span class="keyword">from</span> pandas <span class="keyword">import</span> read_csv</div><div class="line"><span class="keyword">import</span> numpy</div><div class="line"><span class="keyword">import</span> math</div><div class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> Sequential</div><div class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Dense</div><div class="line"><span class="keyword">from</span> keras.optimizers <span class="keyword">import</span> SGD</div><div class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> LabelEncoder</div><div class="line"><span class="keyword">from</span> keras.callbacks <span class="keyword">import</span> LearningRateScheduler</div><div class="line"> </div><div class="line"><span class="comment"># learning rate schedule</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">step_decay</span><span class="params">(epoch)</span>:</span></div><div class="line">    initial_lrate = <span class="number">0.1</span></div><div class="line">    drop = <span class="number">0.5</span></div><div class="line">    epochs_drop = <span class="number">10.0</span></div><div class="line">    lrate = initial_lrate * math.pow(drop, math.floor((<span class="number">1</span>+epoch)/epochs_drop))</div><div class="line">    <span class="keyword">return</span> lrate</div><div class="line"> </div><div class="line"><span class="comment"># fix random seed for reproducibility</span></div><div class="line">seed = <span class="number">7</span></div><div class="line">numpy.random.seed(seed)</div><div class="line"><span class="comment"># load dataset</span></div><div class="line">dataframe = read_csv(<span class="string">"ionosphere.csv"</span>, header=<span class="keyword">None</span>)</div><div class="line">dataset = dataframe.values</div><div class="line"><span class="comment"># split into input (X) and output (Y) variables</span></div><div class="line">X = dataset[:,<span class="number">0</span>:<span class="number">34</span>].astype(float)</div><div class="line">Y = dataset[:,<span class="number">34</span>]</div><div class="line"><span class="comment"># encode class values as integers</span></div><div class="line">encoder = LabelEncoder()</div><div class="line">encoder.fit(Y)</div><div class="line">Y = encoder.transform(Y)</div><div class="line"><span class="comment"># create model</span></div><div class="line">model = Sequential()</div><div class="line">model.add(Dense(<span class="number">34</span>, input_dim=<span class="number">34</span>, kernel_initializer=<span class="string">'normal'</span>, activation=<span class="string">'relu'</span>))</div><div class="line">model.add(Dense(<span class="number">1</span>, kernel_initializer=<span class="string">'normal'</span>, activation=<span class="string">'sigmoid'</span>))</div><div class="line"><span class="comment"># Compile model</span></div><div class="line">sgd = SGD(lr=<span class="number">0.0</span>, momentum=<span class="number">0.9</span>, decay=<span class="number">0.0</span>, nesterov=<span class="keyword">False</span>)</div><div class="line">model.compile(loss=<span class="string">'binary_crossentropy'</span>, optimizer=sgd, metrics=[<span class="string">'accuracy'</span>])</div><div class="line"><span class="comment"># learning schedule callback</span></div><div class="line">lrate = LearningRateScheduler(step_decay)</div><div class="line">callbacks_list = [lrate]</div><div class="line"><span class="comment"># Fit the model</span></div><div class="line">model.fit(X, Y, validation_split=<span class="number">0.33</span>, epochs=<span class="number">50</span>, batch_size=<span class="number">28</span>, callbacks=callbacks_list, verbose=<span class="number">2</span>)</div></pre></td></tr></table></figure>
+<p>运行代码，可以从输出信息中看到测试集上的准确率最后可以达到99.14%的水平，满足性能要求。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">Epoch <span class="number">45</span>/<span class="number">50</span></div><div class="line"><span class="number">0</span>s - loss: <span class="number">0.0546</span> - acc: <span class="number">0.9830</span> - val_loss: <span class="number">0.0634</span> - val_acc: <span class="number">0.9914</span></div><div class="line">Epoch <span class="number">46</span>/<span class="number">50</span></div><div class="line"><span class="number">0</span>s - loss: <span class="number">0.0544</span> - acc: <span class="number">0.9872</span> - val_loss: <span class="number">0.0638</span> - val_acc: <span class="number">0.9914</span></div><div class="line">Epoch <span class="number">47</span>/<span class="number">50</span></div><div class="line"><span class="number">0</span>s - loss: <span class="number">0.0553</span> - acc: <span class="number">0.9872</span> - val_loss: <span class="number">0.0696</span> - val_acc: <span class="number">0.9914</span></div><div class="line">Epoch <span class="number">48</span>/<span class="number">50</span></div><div class="line"><span class="number">0</span>s - loss: <span class="number">0.0537</span> - acc: <span class="number">0.9872</span> - val_loss: <span class="number">0.0675</span> - val_acc: <span class="number">0.9914</span></div><div class="line">Epoch <span class="number">49</span>/<span class="number">50</span></div><div class="line"><span class="number">0</span>s - loss: <span class="number">0.0537</span> - acc: <span class="number">0.9872</span> - val_loss: <span class="number">0.0636</span> - val_acc: <span class="number">0.9914</span></div><div class="line">Epoch <span class="number">50</span>/<span class="number">50</span></div><div class="line"><span class="number">0</span>s - loss: <span class="number">0.0534</span> - acc: <span class="number">0.9872</span> - val_loss: <span class="number">0.0679</span> - val_acc: <span class="number">0.9914</span></div></pre></td></tr></table></figure>
+<h2 id="学习率计划器常用技巧"><a href="#学习率计划器常用技巧" class="headerlink" title="学习率计划器常用技巧"></a>学习率计划器常用技巧</h2><p>本节将列出神经网络训练过程中常用的技巧:</p>
+<ul>
+<li><strong>提高初始学习率</strong>。因为学习率一般会随着训练批次的增加而降低，所以不妨让学习率从一个较高的水平开始下降。较大的学习率可以使模型在初始训练时权重有更大的变化，有助于后续低学习率调优时收敛至更优的权重范围。</li>
+<li><strong>使用大的动量系数</strong>。使用大的动量系数可以保证在你的学习率衰减得比较小时，优化算法还可以使模型权重在正确的方向上以较快的速度收敛。</li>
+<li><strong>尝试不同的学习率计划器</strong>。因为现在还没有理论明确地指出什么情况下应该使用什么样的学习率规划器，所以你需要尝试各种不同的配置来寻找最适合你当前问题的计划器配置。你可以按照指数规律划分学习率规划器的参数，也可以根据模型在训练集/测试集上响应的结果自适应地调整学习率规划器参数。</li>
+</ul>
+<h2 id="回顾总结"><a href="#回顾总结" class="headerlink" title="回顾总结"></a>回顾总结</h2><p>本片文章探究了神经网络训练过程中的学习率规划器。</p>
+<p>本文解决的主要问题：</p>
+<ul>
+<li>如何配置和评估连续衰减的学习率规划器。</li>
+<li>如何配置和评估阶梯式衰减的的学习率规划器。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>您的打赏是对我最大的鼓励！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://oj3kr01vo.bkt.clouddn.com/wechat_pay_github.jpg" alt="ArrayZoneYour WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://oj3kr01vo.bkt.clouddn.com/ali_pay_github.jpg" alt="ArrayZoneYour Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/深度学习/" rel="tag">#深度学习</a>
+          
+            <a href="/tags/学习率/" rel="tag">#学习率</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/17/使用TensorFlow实现股票价格预测深度学习模型/" rel="next" title="使用TensorFlow实现股票价格预测深度学习模型">
+                <i class="fa fa-chevron-left"></i> 使用TensorFlow实现股票价格预测深度学习模型
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2018/02/17/在深度学习模型中使用学习率调度器/"
+           data-title="在深度学习模型中使用学习率调度器" data-url="https://arrayzoneyour.github.io/2018/02/17/在深度学习模型中使用学习率调度器/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ArrayZoneYour" />
+          <p class="site-author-name" itemprop="name">ArrayZoneYour</p>
+          <p class="site-description motion-element" itemprop="description">奇妙的事情每天都在发生</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#模型训练中的学习率规划器"><span class="nav-number">1.</span> <span class="nav-text">模型训练中的学习率规划器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连续衰减的学习率规划器"><span class="nav-number">2.</span> <span class="nav-text">连续衰减的学习率规划器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阶梯式衰减的学习率规划器"><span class="nav-number">3.</span> <span class="nav-text">阶梯式衰减的学习率规划器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#学习率计划器常用技巧"><span class="nav-number">4.</span> <span class="nav-text">学习率计划器常用技巧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回顾总结"><span class="nav-number">5.</span> <span class="nav-text">回顾总结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ArrayZoneYour</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ArrayZoneYour"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

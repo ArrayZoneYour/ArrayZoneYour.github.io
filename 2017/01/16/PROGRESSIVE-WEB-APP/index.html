@@ -1,0 +1,658 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Laravel,Angular," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="Progressive WEB APP概述受益于最新的技术，Progressive WEB APP可以带给用户最好的移动站点和native app。并且是可靠、迅速的，因此吸引了许多开发者。——Google Web Fundamentals">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel-Angular-Material中文文档——PROGRESSIVE WEB APP">
+<meta property="og:url" content="https://arrayzoneyour.github.io/2017/01/16/PROGRESSIVE-WEB-APP/index.html">
+<meta property="og:site_name" content="ArrayZoneYour">
+<meta property="og:description" content="Progressive WEB APP概述受益于最新的技术，Progressive WEB APP可以带给用户最好的移动站点和native app。并且是可靠、迅速的，因此吸引了许多开发者。——Google Web Fundamentals">
+<meta property="og:updated_time" content="2018-02-17T08:07:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel-Angular-Material中文文档——PROGRESSIVE WEB APP">
+<meta name="twitter:description" content="Progressive WEB APP概述受益于最新的技术，Progressive WEB APP可以带给用户最好的移动站点和native app。并且是可靠、迅速的，因此吸引了许多开发者。——Google Web Fundamentals">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6269340096407799000',
+      author: 'ArrayZoneYour'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://arrayzoneyour.github.io/2017/01/16/PROGRESSIVE-WEB-APP/"/>
+
+
+  <title> Laravel-Angular-Material中文文档——PROGRESSIVE WEB APP | ArrayZoneYour </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">ArrayZoneYour</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">自由自在，无忧无虑的小天地</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Laravel-Angular-Material中文文档——PROGRESSIVE WEB APP
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-16T15:35:21+08:00" content="2017-01-16">
+              2017-01-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Laravel-Angular-Material中文文档/" itemprop="url" rel="index">
+                    <span itemprop="name">Laravel-Angular-Material中文文档</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/16/PROGRESSIVE-WEB-APP/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/16/PROGRESSIVE-WEB-APP/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Progressive-WEB-APP"><a href="#Progressive-WEB-APP" class="headerlink" title="Progressive WEB APP"></a>Progressive WEB APP</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>受益于最新的技术，Progressive WEB APP可以带给用户最好的移动站点和native app。并且是可靠、迅速的，因此吸引了许多开发者。——<a href="https://developers.google.com/web/progressive-web-apps/" target="_blank" rel="external">Google Web Fundamentals</a></p>
+<a id="more"></a>
+<h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><p>你可以从浏览器（Chrome、Firefox、或Opera）打开<a href="https://flipkart.com/" target="_blank" rel="external">flipkart.com</a>并将它添加到桌面。<br>progressive web app利用了浏览器最新的功能（因此叫Progressive，先进），将它添加到桌面之后，它可以从桌面启动，离线使用，甚至可以推送消息。</p>
+<h2 id="Web-App-Manifest"><a href="#Web-App-Manifest" class="headerlink" title="Web App Manifest"></a>Web App Manifest</h2><p>web app manifest将以一个文档的形式展现给而用户关于它的信息（像名字、作者、图标、简介等等）<br>它的初级目标是创建一个先进的web app：web app无需用户通过App store就可以被安装至系统桌面（此外还可以离线使用，app内容更改、升级时还可以推送消息）——<a href="https://developer.mozilla.org/en-US/docs/Web/Manifest" target="_blank" rel="external">Mozilla Developer Network</a>  </p>
+<h2 id="php-artisan-pwa-manifest"><a href="#php-artisan-pwa-manifest" class="headerlink" title="php artisan pwa:manifest"></a>php artisan pwa:manifest</h2><p>这个生成器将帮助你创建你自己的<code>manfiest.json</code><br>你可以跳过它的问题来自己直接修改内容</p>
+<h2 id="App-Shell"><a href="#App-Shell" class="headerlink" title="App Shell"></a>App Shell</h2><p>App Shell 是用来搭建用户界面和确保app高性能以及可靠性的组件之一的最小化的HTML、CSS和JavaScript，它在第一次使用的时候就会迅速加载，并且会被缓存起来。这意味着它不需要每次都被重新加载一次，app只需要加载必要的内容即可。<a href="https://developers.google.com/web/fundamentals/getting-started/your-first-progressive-web-app/step-01?hl=en" target="_blank" rel="external">Google Web Fundamentals</a></p>
+<h2 id="App-Shell-in-index-blade-php"><a href="#App-Shell-in-index-blade-php" class="headerlink" title="App Shell in index.blade.php"></a>App Shell in index.blade.php</h2><p>app shell 已经在<code>resource/views/index.blade.php</code>中为你配置完毕<br>你可以在index.blade.php中看看app shell以是怎样的形式在页面中出现的。</p>
+<h2 id="critial-scss"><a href="#critial-scss" class="headerlink" title="critial.scss"></a>critial.scss</h2><p>Critial CSS将为你的App Shell服务，这是app shell用来展示所需的最基本的CSS文件。它是通过sass预处理的，所以你可以使用变量。它们被排除在<code>final.css</code>之外所以不会重复（这里你只需要关心App Shell本身即可）</p>
+<h2 id="sw-precache"><a href="#sw-precache" class="headerlink" title="sw precache"></a>sw precache</h2><p>一个用来生成可以缓存指定资源的服务对应代码的nodejs模块——<a href="https://github.com/GoogleChrome/sw-precache" target="_blank" rel="external">GoogleChrome/sw-precache</a></p>
+<h2 id="sw-precache-amp-gulp"><a href="#sw-precache-amp-gulp" class="headerlink" title="sw precache &amp; gulp"></a>sw precache &amp; gulp</h2><p>sw-precache已经在你的gulpfile.js中配置完毕，它会从<code>precache-config.json</code>读取配置，当你改动其中的配置后无需重新执行<code>gulp watch</code>命令<br>默认情况下，我们会缓存app shell的文件结构，字体样式，以及你最新的资源文件（CSS &amp; JavaScript）</p>
+<h2 id="运行缓存"><a href="#运行缓存" class="headerlink" title="运行缓存"></a>运行缓存</h2><p>运行缓存允许你自己进行配置[sw-toolbox]</p>
+<h2 id="sw-toolbox"><a href="#sw-toolbox" class="headerlink" title="sw toolbox"></a>sw toolbox</h2><p>一个用来处理运行时请求的服务工具集合——<a href="https://github.com/GoogleChrome/sw-toolbox" target="_blank" rel="external">GoogleChrome/sw-toolbox</a></p>
+<h2 id="precache-config-json"><a href="#precache-config-json" class="headerlink" title="precache-config.json"></a>precache-config.json</h2><p>你可以在<code>precache-config.json</code>中的runruntimeCaching对象中自定制你的缓存策略。默认情况下我们为Github的button和网页字体指定了<code>cacheFirst</code>的策略。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>您的打赏是对我最大的鼓励！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://oj3kr01vo.bkt.clouddn.com/wechat_pay_github.jpg" alt="ArrayZoneYour WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://oj3kr01vo.bkt.clouddn.com/ali_pay_github.jpg" alt="ArrayZoneYour Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Laravel/" rel="tag">#Laravel</a>
+          
+            <a href="/tags/Angular/" rel="tag">#Angular</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/16/Angular生成器/" rel="next" title="Laravel-Angular-Material中文文档——Angular 生成器">
+                <i class="fa fa-chevron-left"></i> Laravel-Angular-Material中文文档——Angular 生成器
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/16/REST-API/" rel="prev" title="Laravel-Angular-Material中文文档——REST API">
+                Laravel-Angular-Material中文文档——REST API <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/01/16/PROGRESSIVE-WEB-APP/"
+           data-title="Laravel-Angular-Material中文文档——PROGRESSIVE WEB APP" data-url="https://arrayzoneyour.github.io/2017/01/16/PROGRESSIVE-WEB-APP/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ArrayZoneYour" />
+          <p class="site-author-name" itemprop="name">ArrayZoneYour</p>
+          <p class="site-description motion-element" itemprop="description">奇妙的事情每天都在发生</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Progressive-WEB-APP"><span class="nav-number">1.</span> <span class="nav-text">Progressive WEB APP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DEMO"><span class="nav-number">1.2.</span> <span class="nav-text">DEMO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-App-Manifest"><span class="nav-number">1.3.</span> <span class="nav-text">Web App Manifest</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#php-artisan-pwa-manifest"><span class="nav-number">1.4.</span> <span class="nav-text">php artisan pwa:manifest</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#App-Shell"><span class="nav-number">1.5.</span> <span class="nav-text">App Shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#App-Shell-in-index-blade-php"><span class="nav-number">1.6.</span> <span class="nav-text">App Shell in index.blade.php</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#critial-scss"><span class="nav-number">1.7.</span> <span class="nav-text">critial.scss</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sw-precache"><span class="nav-number">1.8.</span> <span class="nav-text">sw precache</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sw-precache-amp-gulp"><span class="nav-number">1.9.</span> <span class="nav-text">sw precache & gulp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行缓存"><span class="nav-number">1.10.</span> <span class="nav-text">运行缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sw-toolbox"><span class="nav-number">1.11.</span> <span class="nav-text">sw toolbox</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#precache-config-json"><span class="nav-number">1.12.</span> <span class="nav-text">precache-config.json</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ArrayZoneYour</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ArrayZoneYour"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

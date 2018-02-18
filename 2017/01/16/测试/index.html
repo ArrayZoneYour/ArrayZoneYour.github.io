@@ -1,0 +1,742 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Laravel,Angular," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="API test helpers这个库的目的是让你可以容易测试REST API下面是一些提供给你的集成测试方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel-Angular-Material中文文档——测试">
+<meta property="og:url" content="https://arrayzoneyour.github.io/2017/01/16/测试/index.html">
+<meta property="og:site_name" content="ArrayZoneYour">
+<meta property="og:description" content="API test helpers这个库的目的是让你可以容易测试REST API下面是一些提供给你的集成测试方法">
+<meta property="og:updated_time" content="2018-02-17T08:07:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel-Angular-Material中文文档——测试">
+<meta name="twitter:description" content="API test helpers这个库的目的是让你可以容易测试REST API下面是一些提供给你的集成测试方法">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6269340096407799000',
+      author: 'ArrayZoneYour'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://arrayzoneyour.github.io/2017/01/16/测试/"/>
+
+
+  <title> Laravel-Angular-Material中文文档——测试 | ArrayZoneYour </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">ArrayZoneYour</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">自由自在，无忧无虑的小天地</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Laravel-Angular-Material中文文档——测试
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-16T15:43:50+08:00" content="2017-01-16">
+              2017-01-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Laravel-Angular-Material中文文档/" itemprop="url" rel="index">
+                    <span itemprop="name">Laravel-Angular-Material中文文档</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/16/测试/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/16/测试/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="API-test-helpers"><a href="#API-test-helpers" class="headerlink" title="API test helpers"></a>API test helpers</h2><p>这个库的目的是让你可以容易测试REST API<br>下面是一些提供给你的集成测试方法<br><a id="more"></a></p>
+<table>
+<thead>
+<tr>
+<th>test helper</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>seeApiSuccess()</td>
+<td>断言返回的响应使用了<code>success</code>响应宏（即返回了成功数据）</td>
+</tr>
+<tr>
+<td>seeValidationError()</td>
+<td>断言返回码为422，并且返回了错误（当你<code>return response()-&gt;error(&#39;message&#39;, 422);</code>时Laravel会抛出一个验证错误，这里断言的就是接收到此内容）</td>
+</tr>
+<tr>
+<td>seeApiError($status_code)</td>
+<td>断言具体的状态码错误，比方说401</td>
+</tr>
+<tr>
+<td>seeJsonKey($key)</td>
+<td>等价于<code>-&gt;see(&#39;&quot;&#39;.$key.&#39;&quot;&#39;)</code></td>
+</tr>
+<tr>
+<td>seeJsonValue($value)</td>
+<td>等价于<code>-&gt;see(&#39;&quot;&#39;.$value.&#39;&quot;&#39;)</code></td>
+</tr>
+<tr>
+<td>seeJsonArray($entity)</td>
+<td>等价于<code>-&gt;see(&#39;&quot;&#39;.$entity.&#39;&quot;:[&#39;)</code> 当你想要得到一个数组时非常有用</td>
+</tr>
+<tr>
+<td>seeJsonObject($entity)</td>
+<td>等价于<code>-&gt;see(&#39;&quot;&#39;.$entity.&#39;&quot;:{&#39;)</code> 当你想得到单个数据比方说一个订单的时候非常有用</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>避免在你的模型工厂中使用bcrypt()。因为这件减慢你的测试，只有当你需要知道user model创建的password时再使用它。（比方说：login,reset password的测试中）</p>
+</blockquote>
+<p>下面是一些示例控制器和它们对应的集成测试方法<br><strong>Routes.php</strong>  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line">$api-&gt;group([], <span class="function"><span class="keyword">function</span> <span class="params">($api)</span> </span>&#123;</div><div class="line"></div><div class="line">    $api-&gt;post(<span class="string">'posts'</span>, <span class="string">'PostsController@create'</span>);</div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p><strong>PostsController.php</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Post</span>;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostsController</span></span>&#123;</div><div class="line"> </div><div class="line">   <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">create</span><span class="params">(Request $request)</span></span></div><div class="line">   &#123;</div><div class="line">       <span class="keyword">$this</span>-&gt;validate($request, [</div><div class="line">         <span class="string">'name'</span>   =&gt; <span class="string">'required'</span>,</div><div class="line">       ]);</div><div class="line">     </div><div class="line">       $post = Post::create([</div><div class="line">         <span class="string">'name'</span> =&gt; $request-&gt;input(<span class="string">'name'</span>),</div><div class="line">         ]);</div><div class="line">     </div><div class="line">       <span class="keyword">return</span> response()-&gt;success(compact(<span class="string">'post'</span>));</div><div class="line">   &#125;</div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>CreatePostTest.php</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">CreatePostTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span></div><div class="line">&#123; </div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testCreatingNewPostSuccessfully</span><span class="params">()</span></span></div><div class="line">    &#123;</div><div class="line">        $post = factory(App\Post::class)-&gt;make();<span class="comment">//we're not saving it in the database</span></div><div class="line">      </div><div class="line">        <span class="keyword">$this</span>-&gt;post(<span class="string">'/api/posts'</span>, [<span class="string">'name'</span> =&gt; $post-&gt;name])</div><div class="line">        -&gt;seeApiSuccess()</div><div class="line">        -&gt;seeJsonObject(<span class="string">'post'</span>)</div><div class="line">        -&gt;seeJson([<span class="string">'name'</span> =&gt; $post-&gt;name]);</div><div class="line">        </div><div class="line">        <span class="keyword">$this</span>-&gt;seeInDatabase(<span class="string">'posts'</span>, [</div><div class="line">           <span class="string">'name'</span> =&gt; $post-&gt;name,</div><div class="line">        ]);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>不要忘了在你的测试方法中路由头部的<code>/api</code></p>
+</blockquote>
+<h2 id="JWT-Auth-Tests"><a href="#JWT-Auth-Tests" class="headerlink" title="JWT Auth Tests"></a>JWT Auth Tests</h2><p>当做测试驱动开发时，我们的大部分测试都会覆盖到被保护的接口。这些接口都需要认证。这个库提供了一些用来测试被保护的接口的方法，而无需再手动发送token</p>
+<h3 id="可用方法"><a href="#可用方法" class="headerlink" title="可用方法"></a>可用方法</h3><blockquote>
+<p>以下方法与Laravel的test helper使用了同样的签名(get, post, put, delete, call)。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>authUserGet()</th>
+<th>GET (验证通过情况)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>authUserPost()</td>
+<td>POST（验证通过情况）</td>
+</tr>
+<tr>
+<td>authUserPut()</td>
+<td>PUT（验证通过情况）</td>
+</tr>
+<tr>
+<td>authUserDelete()</td>
+<td>DELETE（验证通过情况）</td>
+</tr>
+<tr>
+<td>authUserCall()</td>
+<td>自定义的方法、cookie、files、server等等（验证通过情况）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>你可以通过使用<code>$this-&gt;getAuthUser()</code>来访问当前已经认证的用户，使用<code>$this-&gt;getAuthUserToken()</code>，他们在<code>/tests/TestCase.php</code>中是可用的。  </p>
+</blockquote>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p><strong>Routes.php</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line">$api-&gt;group([<span class="string">'middleware'</span> =&gt; <span class="string">'api.auth'</span>], <span class="function"><span class="keyword">function</span> <span class="params">($api)</span> </span>&#123;</div><div class="line"></div><div class="line">    $api-&gt;post(<span class="string">'posts'</span>, <span class="string">'PostsController@create'</span>);</div><div class="line"></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p><strong>FavoritePostsTest</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">FavoritePostsTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span></div><div class="line">&#123;</div><div class="line"> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testCreatingNewPost</span><span class="params">()</span></span></div><div class="line">    &#123;</div><div class="line">        $post = factory(App\Post::class)-&gt;make();</div><div class="line">      </div><div class="line">        <span class="keyword">$this</span>-&gt;authUserPost(<span class="string">'/api/posts'</span>, [<span class="string">'name'</span> =&gt; $post-&gt;name])</div><div class="line">        -&gt;seeApiSuccess()</div><div class="line">        -&gt;seeJsonObject(<span class="string">'post'</span>)</div><div class="line">        -&gt;seeJsonKeyValueString(<span class="string">'name'</span>, $post-&gt;name);</div><div class="line">    &#125;</div><div class="line">  </div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="多租户应用的测试方法"><a href="#多租户应用的测试方法" class="headerlink" title="多租户应用的测试方法"></a>多租户应用的测试方法</h3><p>如果你的应用和平台上有着多种用户，你希望有下面的test helper吗？<br><code>-&gt;StudentGet()</code>，<code>-&gt;StudentPost()</code>，<code>-&gt;TeacherPost()</code>，<code>-&gt;TeacherGet()</code>，等等<br>如果你打开了<code>TestCase.php</code>，你可以看到我们可以通过调用<code>$this-&gt;getAuthUserToken()</code>手动登录一个用户。这是我们一个创建User的工厂。<br>你的方法应该是找到所有的认证用户方法和变量，并且将其重命名为对应的租户名，然后修改<code>Set[租户名]</code>方法来获得该类型用户的工厂。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$mentor = factory(App\User::class)-&gt;create([<span class="string">'type'</span> =&gt; <span class="string">'租户名'</span>]);</div></pre></td></tr></table></figure>
+<p>其他租户同理</p>
+<h2 id="Angular-tests"><a href="#Angular-tests" class="headerlink" title="Angular tests"></a>Angular tests</h2><p><a href="https://github.com/kensho/ng-describe" target="_blank" rel="external">ng-describe</a>是预置的类库，它可以使你为你的angular app编写流畅的测试代码。<br><strong>ng-describe</strong>使测试<strong>components, services, inject dependencies</strong>和<strong>mock ajax calls</strong>变得非常简单，你可以浏览它为注册登录组件编写的测试方法。</p>
+<blockquote>
+<p>Angular 生成器<br><strong>components, directives</strong>和<strong>service</strong>都自动生成了ng-describe spec 文件，你只需要实现测试用例即可。  </p>
+</blockquote>
+<p><strong>forget_password.spec.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">ngDescribe(&#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">'Test forgot-password component'</span>,</div><div class="line">    <span class="attr">modules</span>: <span class="string">'app'</span>,</div><div class="line">    <span class="attr">inject</span>: <span class="string">'$http'</span>,</div><div class="line">    <span class="attr">element</span>: <span class="string">'&lt;forgot-password&gt;&lt;/forgot-password&gt;'</span>,</div><div class="line">    <span class="attr">http</span>: &#123;</div><div class="line">        <span class="attr">post</span>: &#123;</div><div class="line">            <span class="string">'/api/auth/password/email'</span>: &#123;</div><div class="line">                <span class="attr">data</span>: <span class="literal">true</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">tests</span>: <span class="function"><span class="keyword">function</span>(<span class="params">deps</span>) </span>&#123;</div><div class="line"></div><div class="line">        it(<span class="string">'should request email verification successfully'</span>, () =&gt; &#123;</div><div class="line">            <span class="keyword">var</span> component = deps.element.isolateScope().vm;</div><div class="line"></div><div class="line">            component.email = <span class="string">'email@localhost.com'</span>;</div><div class="line">            component.submit();</div><div class="line"></div><div class="line">            deps.http.flush();</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>您的打赏是对我最大的鼓励！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://oj3kr01vo.bkt.clouddn.com/wechat_pay_github.jpg" alt="ArrayZoneYour WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://oj3kr01vo.bkt.clouddn.com/ali_pay_github.jpg" alt="ArrayZoneYour Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Laravel/" rel="tag">#Laravel</a>
+          
+            <a href="/tags/Angular/" rel="tag">#Angular</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/16/JWT-AUTH/" rel="next" title="Laravel-Angular-Material中文文档——JWT AUTH">
+                <i class="fa fa-chevron-left"></i> Laravel-Angular-Material中文文档——JWT AUTH
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/16/附录（补充）/" rel="prev" title="Laravel-Angular-Material中文文档——附录（补充）">
+                Laravel-Angular-Material中文文档——附录（补充） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/01/16/测试/"
+           data-title="Laravel-Angular-Material中文文档——测试" data-url="https://arrayzoneyour.github.io/2017/01/16/测试/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ArrayZoneYour" />
+          <p class="site-author-name" itemprop="name">ArrayZoneYour</p>
+          <p class="site-description motion-element" itemprop="description">奇妙的事情每天都在发生</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#API-test-helpers"><span class="nav-number">1.</span> <span class="nav-text">API test helpers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JWT-Auth-Tests"><span class="nav-number">2.</span> <span class="nav-text">JWT Auth Tests</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可用方法"><span class="nav-number">2.1.</span> <span class="nav-text">可用方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例"><span class="nav-number">2.2.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多租户应用的测试方法"><span class="nav-number">2.3.</span> <span class="nav-text">多租户应用的测试方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Angular-tests"><span class="nav-number">3.</span> <span class="nav-text">Angular tests</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ArrayZoneYour</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ArrayZoneYour"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
