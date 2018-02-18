@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="深度学习," />
 
 
 
@@ -84,16 +84,24 @@
 
 
 
-<meta name="description" content="奇妙的事情每天都在发生">
+<meta name="description" content="Sebastian HeinzA simple deep learning model for stock price prediction using TensorFlow
+在最近的黑客马拉松中，我们在STATWORX上进行协作，团队的一些成员利用Google Finance API抓取了每分钟的标准普尔500指数。除了标准普尔500指数以外，我们还收集了其对应的500家公司的股价。在得到了这些">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用TensorFlow实现股票价格预测深度学习模型">
 <meta property="og:url" content="https://arrayzoneyour.github.io/2018/02/17/使用TensorFlow实现股票价格预测深度学习模型/index.html">
 <meta property="og:site_name" content="ArrayZoneYour">
-<meta property="og:description" content="奇妙的事情每天都在发生">
-<meta property="og:updated_time" content="2018-02-17T10:04:16.959Z">
+<meta property="og:description" content="Sebastian HeinzA simple deep learning model for stock price prediction using TensorFlow
+在最近的黑客马拉松中，我们在STATWORX上进行协作，团队的一些成员利用Google Finance API抓取了每分钟的标准普尔500指数。除了标准普尔500指数以外，我们还收集了其对应的500家公司的股价。在得到了这些">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*OK6YP4-xG5v8oakDXk2oDw.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*aCqfu5QVufgPuJNWg4Vn7g.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*SHAol6IyUGn5yoXt7mC4Uw.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*tnbyLo91bfJUexf7TnJamA.png">
+<meta property="og:updated_time" content="2018-02-18T07:19:18.899Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用TensorFlow实现股票价格预测深度学习模型">
-<meta name="twitter:description" content="奇妙的事情每天都在发生">
+<meta name="twitter:description" content="Sebastian HeinzA simple deep learning model for stock price prediction using TensorFlow
+在最近的黑客马拉松中，我们在STATWORX上进行协作，团队的一些成员利用Google Finance API抓取了每分钟的标准普尔500指数。除了标准普尔500指数以外，我们还收集了其对应的500家公司的股价。在得到了这些">
+<meta name="twitter:image" content="https://cdn-images-1.medium.com/max/800/1*OK6YP4-xG5v8oakDXk2oDw.png">
 
 
 
@@ -251,11 +259,30 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2018-02-17T18:04:16+08:00" content="2018-02-17">
+            <time itemprop="dateCreated" datetime="2018-02-17T19:04:16+08:00" content="2018-02-17">
               2018-02-17
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/深度学习/" itemprop="url" rel="index">
+                    <span itemprop="name">深度学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
@@ -286,7 +313,65 @@
       
 
       
-        
+        <blockquote><footer><strong>Sebastian Heinz</strong><cite><a href="https://medium.com/mlreview/a-simple-deep-learning-model-for-stock-price-prediction-using-tensorflow-30505541d877" target="_blank" rel="external">A simple deep learning model for stock price prediction using TensorFlow</a></cite></footer></blockquote>
+<p>在最近的黑客马拉松中，我们在<a href="https://www.statworx.com/de/data-science/" target="_blank" rel="external">STATWORX</a>上进行协作，团队的一些成员利用Google Finance API抓取了每分钟的标准普尔500指数。除了标准普尔500指数以外，我们还收集了其对应的500家公司的股价。在得到了这些数据之后，我立刻想到了一点子：基于标准普尔指数观察的500家公司的股价，用深度学习模型来预测标准普尔500指数。</p>
+<p>把玩这些数据并用TensorFlow在其上建立深度学习模型是很有趣的，所以我决定写下这篇文章：预测标准普尔500指数的简易TensorFlow教程。你将看到的不是一个深入的教程，更多的是从高层次来讲解TensorFlow模型的重要构成组件和概念。我编写的Python代码并没有做专门的性能优化但是可读性还可以。<a href="http://files.statworx.com/sp500.zip" target="_blank" rel="external">下载我使用的数据集</a></p>
+<blockquote>
+<p>注意：本文只是基于TensorFlow的一个实战教程。真正预测股价是非常具有挑战性的，尤其在分钟级这样频率较高的预测中，要考虑的因素的量是庞大的。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="导入数据集"><a href="#导入数据集" class="headerlink" title="导入数据集"></a>导入数据集</h2><p>我们的团队将抓取到的股票数据从爬虫服务器上导出为CSV格式的文件。该数据集包含了从2017年四月到八月共计<code>n=41266</code>分钟的标准普尔500指数以及500家公司的股价。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 导入数据</span></div><div class="line">data = pd.read_csv(<span class="string">'data_stocks.csv'</span>)</div><div class="line"><span class="comment"># 移除日期列</span></div><div class="line">data = data.drop([<span class="string">'DATE'</span>], <span class="number">1</span>)</div><div class="line"><span class="comment"># 数据集的维度</span></div><div class="line">n = data.shape[<span class="number">0</span>]</div><div class="line">p = data.shape[<span class="number">1</span>]</div><div class="line"><span class="comment"># 将数据集转化为numpy数组</span></div><div class="line">data = data.values</div></pre></td></tr></table></figure>
+<p>数据是经过清洗准备好的，这意味着指数数据和股票数据是遵循LOCF（<a href="http://methods.sagepub.com/reference/encyc-of-research-design/n211.xml" target="_blank" rel="external">Last Observation Carried Forward</a>）方法的,所以文件中不包含任何的缺失值。</p>
+<p>可以通过<code>pyplot.plot(&#39;SP500&#39;)</code>来快速查看标准普尔500指数的时间序列。</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*OK6YP4-xG5v8oakDXk2oDw.png" alt="Time series plot of the S&amp;P 500 index."></p>
+<p>注意：这里展示的是标普500指数的领先(lead)，也就是说其值是原始值在时间轴上后移一分钟得到的。因为我们要预测的是下一分钟的指数而不是当前的指数，所以这一操作是必不可少的。</p>
+<h2 id="准备训练集和测试集数据"><a href="#准备训练集和测试集数据" class="headerlink" title="准备训练集和测试集数据"></a>准备训练集和测试集数据</h2><p>原始数据集被划分为训练集和测试集。训练数据集包含了整个数据集的80%。注意这里的数据集划分不是随机划分得到的，而是顺序切片得到的。训练数据集是从2017年的4月到大约7月底，测试数据集则为到17年8月底的剩余数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 划分训练集和测试集</span></div><div class="line">train_start = <span class="number">0</span></div><div class="line">train_end = int(np.floor(<span class="number">0.8</span>*n))</div><div class="line">test_start = train_end + <span class="number">1</span></div><div class="line">test_end = n</div><div class="line">data_train = data[np.arange(train_start, train_end), :]</div><div class="line">data_test = data[np.arange(test_start, test_end), :]</div></pre></td></tr></table></figure>
+<p>时间序列的交叉验证方法有很多，像有无<code>refitting</code>或其他像<a href="https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29" target="_blank" rel="external">time series bootstrap resampling</a>的精细概念的滚动预测（rolling forecasts）。后者（time series bootstrap resampling）中的重复样本是考虑时间序列的周期性分解的结果，这是为了使模拟采样同样具有周期性的特征而不是单单复制采样值。</p>
+<h2 id="数据缩放"><a href="#数据缩放" class="headerlink" title="数据缩放"></a>数据缩放</h2><p>大多数的神经网络都受益于输入值的缩放（有时也有输出值）。为什么呢？因为大多数神经网络的激励函数都是定义在[0, 1]区间或[-1, 1]区间，像sigmoid函数和tanh函数一样。虽然如今线性整流单元已经被广泛引用于无界的激活值问题中，但是我们还是选择将输入输出值做统一的缩放。缩放操作可以通过sklearn中的<code>MinMaxScaler</code>轻松实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 数据缩放</span></div><div class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> MinMaxScaler</div><div class="line">scaler = MinMaxScaler()</div><div class="line">scaler.fit(data_train)</div><div class="line">data_train = scaler.transform(data_train)</div><div class="line">data_test = scaler.transform(data_test)</div><div class="line"><span class="comment"># 构建 X and y</span></div><div class="line">X_train = data_train[:, <span class="number">1</span>:]</div><div class="line">y_train = data_train[:, <span class="number">0</span>]</div><div class="line">X_test = data_test[:, <span class="number">1</span>:]</div><div class="line">y_test = data_test[:, <span class="number">0</span>]</div></pre></td></tr></table></figure>
+<p>备注：应当仔细考虑好什么数据要在什么时候被缩放。一个常见的错误是在训练集和测试集划分前进行特征缩放。为什么这样做是错误的呢？因为缩放的计算需要调用数据的统计值（像数据的最大最小值）。当你在真实生活中进行预测时你并没有来自未来的观测信息，所以相应地，训练数据特征缩放所用的统计值应当来源于训练集，测试集也一样。否则，在预测时使用了包含未来信息往往会导致性能指标向好的方向偏移。</p>
+<h2 id="TensorFlow简介"><a href="#TensorFlow简介" class="headerlink" title="TensorFlow简介"></a>TensorFlow简介</h2><p>TensorFlow是一个非常棒的软件，是深度学习和神经网络计算框架中的领头羊。它的底层后端是用<code>C++</code>编写的，通常通过Python来进行控制（还有<a href="https://tensorflow.rstudio.com/" target="_blank" rel="external">R语言版的TensorFlow</a>，由RStudio维护）。TensorFlow用图来描述底层的计算任务，这种方法使得用户可以通过表征数据，变量和操作的元素组合得到的计算图来指定相应的数学操作。由于神经网络实际上就是数据和数学操作的图，TensorFlow可以完美地应用于神经网络和深度学习，可以看下面给出的一个简单例子（取自作者的博文：<a href="https://www.statworx.com/ch/blog/deep-learning-teil-2-programmierung/" target="_blank" rel="external">Deep learning introduction</a>）</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*aCqfu5QVufgPuJNWg4Vn7g.png" alt="A very simple graph that adds two numbers together."></p>
+<p>上图中两个数字要完成加和的操作。两个加数被存储在两个变量<code>a</code>和<code>b</code>当中，他们的值流入了正方形节点，即代表他们完成相加操作的位置。加和的结果被存储在另一个变量<code>c</code>中。事实上，<code>a</code>，<code>b</code>和<code>c</code>都可以被视为占位符。任何被填入<code>a</code>，<code>b</code>的数字将在完成加和操作后存入<code>c</code>中。这就是TensorFlow的工作原理，用户通过变量和占位符来定义模型（神经网络）的抽象表示。随后，占位符被实际的数字填充并开始进行实际的运算。下面的代码实现了上面简单的计算图。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 引入 TensorFlow</span></div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line"><span class="comment"># 定义 a 和 b 为占位符</span></div><div class="line">a = tf.placeholder(dtype=tf.int8)</div><div class="line">b = tf.placeholder(dtype=tf.int8)</div><div class="line"></div><div class="line"><span class="comment"># 定义加法运算</span></div><div class="line">c = tf.add(a, b)</div><div class="line"></div><div class="line"><span class="comment"># 初始化图</span></div><div class="line">graph = tf.Session()</div><div class="line"></div><div class="line"><span class="comment"># 运行图</span></div><div class="line">graph.run(c, feed_dict=&#123;a: <span class="number">5</span>, b: <span class="number">4</span>&#125;)</div></pre></td></tr></table></figure>
+<p>在引入TensorFlow的库之后，两个占位符可以以<code>tf.placeholder()</code>的方式定义，对应上面图示中左侧两个蓝色的图形。随后通过<code>tf.add()</code>来定义数学加法操作，运算的结果为<code>c = 9</code>。当建立占位符之后，可以用任意的整数值<code>a</code>,<code>b</code>来执行计算图。当然，以上的问题不过是一个简单的示例而已，真正神经网络中的图和运算要复杂得多。</p>
+<h2 id="占位符"><a href="#占位符" class="headerlink" title="占位符"></a>占位符</h2><p>正如上面所说，所有的过程都从占位符开始。为了拟合模型，我们需要定义两个占位符：<code>X</code>包含模型输入（在<code>T = t</code>时刻500个成员公司的股价），<code>Y</code>为模型输出（<code>T = t + 1</code>时刻的标普指数）。</p>
+<p>占位符的<code>shape</code>分别为<code>[None, n_stocks]</code>和<code>[None]</code>，意味着输入为二维矩阵，输出为一维向量。设计出恰当的神经网络的必要条件之一就是清楚神经网络需要的输入和输出维度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 占位符</span></div><div class="line">X = tf.placeholder(dtype=tf.float32, shape=[<span class="keyword">None</span>, n_stocks])</div><div class="line">Y = tf.placeholder(dtype=tf.float32, shape=[<span class="keyword">None</span>])</div></pre></td></tr></table></figure>
+<p><code>None</code>值代表着我们当前不知道每个批次中流经神经网络的观测值数量，所以为了保持该量的弹性，我们用<code>None</code>来填充。稍后我们将定义控制每个批次中观测样本数量的变量<code>batch_size</code>。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>除了占位符，TensorFlow中的另一个基本概念是变量。占位符在图中用来存储输入数据和输出数据，变量在图的执行过程中可以变化，是一个弹性的容器。为了在训练中调整权重和偏置，它们被定义为变量。变量需要在训练开始前进行初始化。变量的初始化稍后我们会单独讲解。</p>
+<p>我们的模型包含四个层。第一层有1024个神经元，比输入变量的两倍还要多一点。紧接在后面的隐藏层是前面一层的一半，即后面层的神经元个数分别为512,256和128。每层中神经元数量的减少也意味着信息量的压缩。当然还有其他的神经网络结构，但是不在本文的讨论范围当中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 模型结构参数</span></div><div class="line">n_stocks = <span class="number">500</span></div><div class="line">n_neurons_1 = <span class="number">1024</span></div><div class="line">n_neurons_2 = <span class="number">512</span></div><div class="line">n_neurons_3 = <span class="number">256</span></div><div class="line">n_neurons_4 = <span class="number">128</span></div><div class="line">n_target = <span class="number">1</span></div><div class="line"><span class="comment"># 第一层 : 隐藏层权重和偏置变量</span></div><div class="line">W_hidden_1 = tf.Variable(weight_initializer([n_stocks, n_neurons_1]))</div><div class="line">bias_hidden_1 = tf.Variable(bias_initializer([n_neurons_1]))</div><div class="line"><span class="comment"># 第二层 : 隐藏层权重和偏置变量</span></div><div class="line">W_hidden_2 = tf.Variable(weight_initializer([n_neurons_1, n_neurons_2]))</div><div class="line">bias_hidden_2 = tf.Variable(bias_initializer([n_neurons_2]))</div><div class="line"><span class="comment"># 第三层: 隐藏层权重和偏置变量</span></div><div class="line">W_hidden_3 = tf.Variable(weight_initializer([n_neurons_2, n_neurons_3]))</div><div class="line">bias_hidden_3 = tf.Variable(bias_initializer([n_neurons_3]))</div><div class="line"><span class="comment"># 第四层: 隐藏层权重和偏置变量</span></div><div class="line">W_hidden_4 = tf.Variable(weight_initializer([n_neurons_3, n_neurons_4]))</div><div class="line">bias_hidden_4 = tf.Variable(bias_initializer([n_neurons_4]))</div><div class="line"></div><div class="line"><span class="comment"># 输出层: 输出权重和偏置变量</span></div><div class="line">W_out = tf.Variable(weight_initializer([n_neurons_4, n_target]))</div><div class="line">bias_out = tf.Variable(bias_initializer([n_target]))</div></pre></td></tr></table></figure>
+<p>清楚输入层，隐藏层和输出层的变量对应的维度是非常重要的。在多层感知机的经验法则中（MLPs，本文就是按照该准则设计的网络），前一层权重的维度数组中的第二个元素与当前层中权重维度数组的第一个元素数值相等。听起来可能有些复杂，但是为了使当前层的输入作为输入传入下一层，这样的法则是必要的。偏置的维度等于当前层权重维度数组中的第二个元素，对应当前层中神经元的数量。</p>
+<h2 id="设计网络架构"><a href="#设计网络架构" class="headerlink" title="设计网络架构"></a>设计网络架构</h2><p>在定义了所需的权重和偏置变量之后，网络的拓扑结构即网络的架构需要被确定下来。在TensorFlow中，即需要将占位符（数据）和变量（权重和偏置）整合入矩阵乘法的序列当中。</p>
+<p>除此之外，神经网络中是经过了激活函数的转换的。激活函数是神经网络架构中非常的元素之一，在非线性系统中尤其如此。目前已经有很多中可供使用的激活函数，本文中的模型选用了最常用的整流线性单元（ReLU）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 隐藏层</span></div><div class="line">hidden_1 = tf.nn.relu(tf.add(tf.matmul(X, W_hidden_1), bias_hidden_1))</div><div class="line">hidden_2 = tf.nn.relu(tf.add(tf.matmul(hidden_1, W_hidden_2), bias_hidden_2))</div><div class="line">hidden_3 = tf.nn.relu(tf.add(tf.matmul(hidden_2, W_hidden_3), bias_hidden_3))</div><div class="line">hidden_4 = tf.nn.relu(tf.add(tf.matmul(hidden_3, W_hidden_4), bias_hidden_4))</div><div class="line"></div><div class="line"><span class="comment"># 输出层 (必须经过转置)</span></div><div class="line">out = tf.transpose(tf.add(tf.matmul(hidden_4, W_out), bias_out))</div></pre></td></tr></table></figure>
+<p>下面的图形说明了网络架构。模型一共包含了三个主要的组件：输入层，隐藏层和输出层。图示的结构被称为前馈网络，前馈意味着从左侧输入的数据将径自向右传播。与之相对的网络结构如recurrent neural networks（RNN）允许数据流在网络结构中反向传播。</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*SHAol6IyUGn5yoXt7mC4Uw.png" alt="我们使用的前馈网络架构图展示"></p>
+<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p>网络的损失函数可以根据网络的预测值和训练集中的实际观测值来生成度量偏差程度的指标。在回归问题当中，最常用的损失函数为均方误差（MSE）。均方误差计算的就是预测值和目标值的误差平方值的平均值。基本上任何可微函数都可以用于计算预测值和目标值之间的偏差程度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 损失函数</span></div><div class="line">mse = tf.reduce_mean(tf.squared_difference(out, Y))</div></pre></td></tr></table></figure>
+<p>但是，在我们的问题中，MSE展示出了一些更有利与解决我们问题的特性。</p>
+<h2 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h2><p>优化器负责训练过程中调整网络的权重和偏置的关键操作。这些操作中包含着梯度运算，梯度方向对应的就是训练过程中最小化网络损失函数的方向。稳定而又高效的优化器是神经网络中深入研究的课题之一。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 优化器</span></div><div class="line">opt = tf.train.AdamOptimizer().minimize(mse)</div></pre></td></tr></table></figure>
+<p>这里我们使用Adam优化器，目前它是深度学习中默认的优化器。Adam的全称为Adaptive Moment Estimation，可以视为其他两个优化器AdaGrad和RMSProp的结合。</p>
+<h2 id="初始化器"><a href="#初始化器" class="headerlink" title="初始化器"></a>初始化器</h2><p>初始化器用于在训练前初始化网络的权重。由于神经网络是利用数值方法进行训练，所以优化问题的起始点是能否找到问题的最优解（或次优解）的关键因素之一。TensorFlow中内置了多种优化器，每个优化器使用了不同的初始化方法。这里我使用的是默认的初始化器之一——<code>tf.variance_scaling_initializer()</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 初始化器</span></div><div class="line">sigma = <span class="number">1</span></div><div class="line">weight_initializer = tf.variance_scaling_initializer(mode=<span class="string">"fan_avg"</span>, distribution=<span class="string">"uniform"</span>, scale=sigma)</div><div class="line">bias_initializer = tf.zeros_initializer()</div></pre></td></tr></table></figure>
+<p>注意：在TensorFlow的计算图中，不同的变量可以定义不同的初始化函数。不过在大多数情况下统一的初始化函数就可以满足要求了。</p>
+<h2 id="拟合神经网络"><a href="#拟合神经网络" class="headerlink" title="拟合神经网络"></a>拟合神经网络</h2><p>在定义了网络的占位符，变量，初始化器，损失函数和优化器之后，模型需要进入正式的训练过程。通常我们使用minibatch的方式进行训练（小的batch size）。在这种训练方式中，我们从训练集中随机抽取<code>n = sample_size</code>的数据样本送入网络进行训练。训练集被划分为<code>n / batch_size</code>个批次并按顺序送入网络。这时占位符<code>X</code>和<code>Y</code>参与了这一过程，它们分别存储输入值和目标值并作为输入和目标送入网络。</p>
+<p>样本数据<code>X</code>将在网络中传播直至输出层。到达输出层后，TensorFlow将把模型的当前预测值与当前批次的实际观测值<code>Y</code>进行比较。随后，TensorFlow将根据选择的学习方案对网络参数进行优化更新。权重和偏置更新完毕后，下一批采样数据将再次送入网络并重复这一过程。这一过程将一直持续至所有批次的数据都已经送入网络。所有的批次构成的一个完整训练过程被称为一个epoch。</p>
+<p>当达到训练批次数或者用户指定的标准之后，网络的训练停止。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 定义会话</span></div><div class="line">net = tf.Session()</div><div class="line"><span class="comment"># 运行初始化器</span></div><div class="line">net.run(tf.global_variables_initializer())</div><div class="line"></div><div class="line"><span class="comment"># 设定用于展示交互的图表</span></div><div class="line">plt.ion()</div><div class="line">fig = plt.figure()</div><div class="line">ax1 = fig.add_subplot(<span class="number">111</span>)</div><div class="line">line1, = ax1.plot(y_test)</div><div class="line">line2, = ax1.plot(y_test*<span class="number">0.5</span>)</div><div class="line">plt.show()</div><div class="line"></div><div class="line"><span class="comment"># 设定 epochs 数和每批次的数据量</span></div><div class="line">epochs = <span class="number">10</span></div><div class="line">batch_size = <span class="number">256</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> e <span class="keyword">in</span> range(epochs):</div><div class="line"></div><div class="line">    <span class="comment"># 打乱训练集</span></div><div class="line">    shuffle_indices = np.random.permutation(np.arange(len(y_train)))</div><div class="line">    X_train = X_train[shuffle_indices]</div><div class="line">    y_train = y_train[shuffle_indices]</div><div class="line"></div><div class="line">    <span class="comment"># Minibatch 训练</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(y_train) // batch_size):</div><div class="line">        start = i * batch_size</div><div class="line">        batch_x = X_train[start:start + batch_size]</div><div class="line">        batch_y = y_train[start:start + batch_size]</div><div class="line">        <span class="comment"># 在当前batch上运行优化器</span></div><div class="line">        net.run(opt, feed_dict=&#123;X: batch_x, Y: batch_y&#125;)</div><div class="line"></div><div class="line">        <span class="comment"># 展示进度</span></div><div class="line">        <span class="keyword">if</span> np.mod(i, <span class="number">5</span>) == <span class="number">0</span>:</div><div class="line">            <span class="comment"># Prediction</span></div><div class="line">            pred = net.run(out, feed_dict=&#123;X: X_test&#125;)</div><div class="line">            line2.set_ydata(pred)</div><div class="line">            plt.title(<span class="string">'Epoch '</span> + str(e) + <span class="string">', Batch '</span> + str(i))</div><div class="line">            file_name = <span class="string">'img/epoch_'</span> + str(e) + <span class="string">'_batch_'</span> + str(i) + <span class="string">'.jpg'</span></div><div class="line">            plt.savefig(file_name)</div><div class="line">            plt.pause(<span class="number">0.01</span>)</div><div class="line"><span class="comment"># 展示训练结束时最终的MSE</span></div><div class="line">mse_final = net.run(mse, feed_dict=&#123;X: X_test, Y: y_test&#125;)</div><div class="line">print(mse_final)</div></pre></td></tr></table></figure>
+<p>每隔5个批次的训练，我们用测试集（网络没有在这些数据上进行训练）来评估一次模型的预测性能并进行可视化。我们特意将每个节点的图像到处至磁盘制作了一个视频来展示训练的过程。可以看到模型很快习得了原始时间序列的形状和位置并且在一定的epochs后可以达到比较准确的预测值。这真是太好了！</p>
+<div style="position:relative;height:0;padding-bottom:75%"><iframe src="https://www.youtube.com/embed/I_KMlGavtiQ?ecver=2" style="position:absolute;width:100%;height:100%;left:0" width="480" height="360" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+
+<p>可以观察到模型先是迅速习得了时间序列的大致形状，随后继续学习数据中精细结构。这与Adam学习方案为了避免越过最小优化值而不断降低学习率是相互照应的。在10个epochs后，我们完美地拟合了训练数据！最终的MSE只有0.00078（注意到我们的数据是缩放过的，所以这个值其实已经很小了）。在测试集绝对误差的占比等于5.31%，表现不错。注意：这只是测试集上的效果，并能代表实际场景中的性能。</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*tnbyLo91bfJUexf7TnJamA.png" alt="标普指数预测值和实际值的散点图(缩放后)."></p>
+<p>这里再给出一些可以进一步提升结果的方法：规划网络层数和神经元个数，选择不同的初始化和激活方案，引入神经元的dropout层，early stopping等等。除此之外，换用其他类型的深度学习模型，比方说RNN也许可以在任务上达到更优的性能。在此我们不做讨论，读者可以自行尝试。</p>
+<h2 id="总结与展望"><a href="#总结与展望" class="headerlink" title="总结与展望"></a>总结与展望</h2><p>TensorFlow的发布是深度学习研究的一个里程碑。它的灵活性和良好的性能使研究者可以借助它完成一系列复杂的网络结构以及其他机器学习算法。不过，与Keras或Mxnet的高层级API相比，TensorFlow高度的灵活性是以增加模型建立的时间周期为代价的。尽管如此，我仍然认为TensorFlow会在神经网络和深度学习的理论研究和实际应用中走向标准化。我们的很多顾客已经开始使用TensorFlow并用它来开发项目，我们在STATWORX上的数据科学顾问也越来越频繁地使用TensorFlow进行研究和开发。看过了Google对TensorFlow的未来规划后，我觉得有一件事被遗忘了（从我的观点来看），就是利用TensorFlow作为后端去设计和开发神经网络的标准用户界面。当然，可能Google已经在做了：）</p>
+<p>本文的代码可以从<a href="https://github.com/sebastianheinz/stockprediction" target="_blank" rel="external">Github</a>上下载，如果觉得译文有何问题欢迎邮件探讨 <a href="&#109;&#97;&#105;&#108;&#116;&#x6f;&#58;&#x31;&#50;&#x30;&#56;&#51;&#57;&#x37;&#51;&#52;&#51;&#x40;&#113;&#113;&#x2e;&#99;&#x6f;&#x6d;">&#x31;&#50;&#x30;&#56;&#51;&#57;&#x37;&#51;&#52;&#51;&#x40;&#113;&#113;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+
       
     </div>
 
@@ -327,22 +412,24 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/深度学习/" rel="tag">#深度学习</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/02/17/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2018/02/17/在深度学习模型中使用学习率调度器/" rel="next" title="在深度学习模型中使用学习率调度器">
+                <i class="fa fa-chevron-left"></i> 在深度学习模型中使用学习率调度器
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/02/17/在深度学习模型中使用学习率调度器/" rel="prev" title="在深度学习模型中使用学习率调度器">
-                在深度学习模型中使用学习率调度器 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -460,7 +547,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#导入数据集"><span class="nav-number">1.</span> <span class="nav-text">导入数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备训练集和测试集数据"><span class="nav-number">2.</span> <span class="nav-text">准备训练集和测试集数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据缩放"><span class="nav-number">3.</span> <span class="nav-text">数据缩放</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TensorFlow简介"><span class="nav-number">4.</span> <span class="nav-text">TensorFlow简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#占位符"><span class="nav-number">5.</span> <span class="nav-text">占位符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量"><span class="nav-number">6.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计网络架构"><span class="nav-number">7.</span> <span class="nav-text">设计网络架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#损失函数"><span class="nav-number">8.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化器"><span class="nav-number">9.</span> <span class="nav-text">优化器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化器"><span class="nav-number">10.</span> <span class="nav-text">初始化器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拟合神经网络"><span class="nav-number">11.</span> <span class="nav-text">拟合神经网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结与展望"><span class="nav-number">12.</span> <span class="nav-text">总结与展望</span></a></li></ol></div>
             
           </div>
         </section>
