@@ -1,0 +1,684 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="强化学习,Q-Learning," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="Arthur JulianiSimple Reinforcement Learning with Tensorflow Part 0: Q-Learning with Tables and Neural Networks
+
+在我这系列的强化学习教程中，我们将探索强化学习大家族中的Q-Learning算法，它和我们后面的教程（1-3）中基于策略的算法有一些差异。在本节中，我们先放下复杂而笨重的深度神">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow强化学习入门（0）——Q-Learning的查找表实现和神经网络实现">
+<meta property="og:url" content="https://arrayzoneyour.github.io/2018/02/21/TensorFlow强化学习入门（0）——基于查找表和神经网络的Q-Learning/index.html">
+<meta property="og:site_name" content="ArrayZoneYour">
+<meta property="og:description" content="Arthur JulianiSimple Reinforcement Learning with Tensorflow Part 0: Q-Learning with Tables and Neural Networks
+
+在我这系列的强化学习教程中，我们将探索强化学习大家族中的Q-Learning算法，它和我们后面的教程（1-3）中基于策略的算法有一些差异。在本节中，我们先放下复杂而笨重的深度神">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*1BZWu1-RoTcDbzsUngkPfw.jpeg">
+<meta property="og:updated_time" content="2018-02-21T14:08:13.405Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TensorFlow强化学习入门（0）——Q-Learning的查找表实现和神经网络实现">
+<meta name="twitter:description" content="Arthur JulianiSimple Reinforcement Learning with Tensorflow Part 0: Q-Learning with Tables and Neural Networks
+
+在我这系列的强化学习教程中，我们将探索强化学习大家族中的Q-Learning算法，它和我们后面的教程（1-3）中基于策略的算法有一些差异。在本节中，我们先放下复杂而笨重的深度神">
+<meta name="twitter:image" content="https://cdn-images-1.medium.com/max/800/1*1BZWu1-RoTcDbzsUngkPfw.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6269340096407799000',
+      author: 'ArrayZoneYour'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://arrayzoneyour.github.io/2018/02/21/TensorFlow强化学习入门（0）——基于查找表和神经网络的Q-Learning/"/>
+
+
+  <title> TensorFlow强化学习入门（0）——Q-Learning的查找表实现和神经网络实现 | ArrayZoneYour </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">ArrayZoneYour</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">自由自在，无忧无虑的小天地</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                TensorFlow强化学习入门（0）——Q-Learning的查找表实现和神经网络实现
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-02-21T17:00:06+08:00" content="2018-02-21">
+              2018-02-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/强化学习/" itemprop="url" rel="index">
+                    <span itemprop="name">强化学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/02/21/TensorFlow强化学习入门（0）——基于查找表和神经网络的Q-Learning/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/02/21/TensorFlow强化学习入门（0）——基于查找表和神经网络的Q-Learning/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote><footer><strong>Arthur Juliani</strong><cite><a href="https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-0-q-learning-with-tables-and-neural-networks-d195264329d0" target="_blank" rel="external">Simple Reinforcement Learning with Tensorflow Part 0: Q-Learning with Tables and Neural Networks</a></cite></footer></blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*1BZWu1-RoTcDbzsUngkPfw.jpeg" alt="我们将学习如何处理OpenAI FrozenLake问题，当然我们的问题不像图片中那样逼真"></p>
+<p>在我这系列的强化学习教程中，我们将探索强化学习大家族中的Q-Learning算法，它和我们后面的教程（1-3）中基于策略的算法有一些差异。在本节中，我们先放下复杂而笨重的深度神经网络，首先在一个简单的查找表基础上实现第一个算法版本，随后我们再考虑如何使用TensorFlow将神经网络的形式集成进来。考虑到该节主要是回顾基础知识，所以我把它归为第0部分。对Q-Learning中发生的细节有所了解对于我们后面学习将策略梯度（policy gradient）和Q-Learning结合来构建先进的RL agent大有裨益。（如果你对策略网络更感兴趣或者已经掌握了Q-Learning相关知识，可以等译者后面的翻译或者<a href="https://medium.com/@awjuliani/super-simple-reinforcement-learning-tutorial-part-1-fd544fab149" target="_blank" rel="external">查阅原文</a>）</p>
+<p>与利用函数直接将当前观测转化为行动的策略梯度方法不同，Q-Learning尝试学习给定状态下的对应值并据此在给定状态下作出特定的行动。尽管两者作出行动的手段不同，但是都可以达到在给定场合下作出智能的行动的效果。你之前可能听说过<a href="http://www.nature.com/nature/journal/v518/n7540/full/nature14236.html" target="_blank" rel="external">深度Q-网络已经可以玩雅达利游戏了</a>。这其实只是我们下面讨论的Q-Learning算法的更大更复杂的实现而已。</p>
+<a id="more"></a>
+<h2 id="查找表实现"><a href="#查找表实现" class="headerlink" title="查找表实现"></a>查找表实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># FrozenLake 问题的规则</div><div class="line">SFFF       (S: 起始点, 安全)</div><div class="line">FHFH       (F: 冰层, 安全)</div><div class="line">FFFH       (H: 空洞, 跌落危险)</div><div class="line">HFFG       (G: 目的地, 飞盘所在地)</div></pre></td></tr></table></figure>
+<p>本教程会基于<a href="https://gym.openai.com/" target="_blank" rel="external">OpenAI gym</a>尝试解决上述的<a href="https://gym.openai.com/envs/FrozenLake-v0" target="_blank" rel="external">FrozenLake</a>问题。OpenAI gym给定了描述这个简单游戏的数组，人们可以让agent基于此进行学习。FrozenLake问题发生在一个4*4的网格区域上，其中包括起始区，安全冰层区，危险空洞区和目标地点，，在任意的时刻agent可以上下左右移动，我们的目标是让agent在不跌落至空洞的前提下到达目的地。这里有一个特殊的问题就是偶尔会有一阵风吹过，使agent被吹到并非它选择的区域。因此在这个问题中每一时刻都作出最优解是不可能的，但是避开空洞抵达目的地还是可行的。只有到达目的地才可以得到1分，除此之外都是0分。由此我们需要一个基于长期过程后的奖惩进行学习的算法，这正是Q-Learning设计的目的。</p>
+<p>在最简单的解法中，Q-Learning就是一个表格，包含了问题中所有可能发生情况，表格中的值表征着我们在当前情况下应当作出什么行动。在FrozenLake问题中，有16个状态（每一个表格单元对应一个情况），4个可选行动，这产生了一个16*4的Q值表格。我们首先将表格初始化为全0，当有行动得分之后我们据此对表格进行更新。</p>
+<p>我们使用贝尔曼方程对Q值表进行更新，贝尔曼方程可以将一系列行动带来的奖励值分配至当前的行动上。<em>在这个方法中，我们不断根据未来决策得到的奖励值来更新当前的表格！</em> 其数学表达式可以写作：</p>
+<blockquote>
+<p>Eq 1. Q(s,a) = r + γ(max(Q(s’,a’))</p>
+</blockquote>
+<p>这个方程中，当前状态(s)和行动(a)对应的Q值等于当前的奖励值(r)加上折算系数乘上当前行动后的状态和下一步行动可能产生的最大Q值。这个可变的折算值可以控制可能的未来奖励值和当前奖励值相比下的重要程度。通过这种方法，表格开始缓慢逼近得到预期奖励值所需的当前各行动的精确度量值。下面给出FrozenLake问题中Q表算法的Python实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Q-Table Learning</span></div><div class="line"><span class="keyword">import</span> gym</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="comment"># 加载实验环境</span></div><div class="line">env = gym.make(<span class="string">'FrozenLake-v0'</span>)</div><div class="line"></div><div class="line"><span class="comment"># 集成Q表学习算法</span></div><div class="line"><span class="comment"># 初始表（全0）</span></div><div class="line">Q = np.zeros([env.observation_space.n,env.action_space.n])</div><div class="line"><span class="comment"># 设定超参数</span></div><div class="line">lr = <span class="number">.8</span></div><div class="line">y = <span class="number">.95</span></div><div class="line">num_episodes = <span class="number">2000</span></div><div class="line"><span class="comment"># 创建episodes中包含当前奖励值和步骤的列表</span></div><div class="line">rList = []</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(num_episodes):</div><div class="line">    <span class="comment"># 初始化环境，得到第一个状态观测值</span></div><div class="line">    s = env.reset()</div><div class="line">    rAll = <span class="number">0</span></div><div class="line">    d = <span class="keyword">False</span></div><div class="line">    j = <span class="number">0</span></div><div class="line">    <span class="comment"># Q表学习算法</span></div><div class="line">    <span class="keyword">while</span> j &lt; <span class="number">99</span>:</div><div class="line">        j += <span class="number">1</span></div><div class="line">        <span class="comment"># 根据Q表和贪心算法(含噪)选定当前的动作</span></div><div class="line">        a = np.argmax(Q[s,:] + np.random.randn(<span class="number">1</span>, env.action_space.n) * (<span class="number">1.</span>/(i+<span class="number">1</span>)))</div><div class="line">        <span class="comment"># 获取新的状态值和奖励值</span></div><div class="line">        s1, r, d, _ = env.step(a)</div><div class="line">        <span class="comment"># 更新Q表</span></div><div class="line">        Q[s,a] = Q[s,a] + lr * (r + y*np.max(Q[s1,]) - Q[s,a])</div><div class="line">        rAll += r</div><div class="line">        s = s1</div><div class="line">        <span class="keyword">if</span> d == <span class="keyword">True</span>:</div><div class="line">            <span class="keyword">break</span></div><div class="line">    rList.append(rAll)</div><div class="line"></div><div class="line">print(<span class="string">"Score over time: "</span> +  str(sum(rList)/num_episodes))</div><div class="line">print(<span class="string">"Final Q-Table Values"</span>)</div><div class="line">print(Q)</div></pre></td></tr></table></figure>
+<h2 id="神经网络实现"><a href="#神经网络实现" class="headerlink" title="神经网络实现"></a>神经网络实现</h2><p>在完成上面的例子的过程中，你可能已经意识到这一点：用表格的方式来实现固然不错，但是弹性太差了。上述的简单问题使用表格实现是很简单，但是有可能问题中的状态(s)和行动(a)会多到无法用表格来存储。不幸的是，大部分我们感兴趣的问题中可能的状态数和行动数都很多，无法使用上面的表格解法。这迫使我们寻找一种新的方式来描述状态，不再依赖Q表来决定下一步的行动：这正是神经网络擅长的地方。通过函数逼近的方法，我们可以将任意的状态表示为矢量形式并通过映射得到Q值。</p>
+<p>在FrozenLake的例子中，我们使用单层网络来接受虚拟编码(One-hot encoding)后的当前状态(1x16)，输出为包含4个Q值的矢量，每个Q值对应一个方向。这样一个简单的网络就可以充当上面的奖励值表格，网络中的权重值取代了之前的表格单元。更关键的一点是我们可以尝试增加层数，激活函数和不同的输入类型，这些在常规的表格中都是不可能实现的。除此之外，神经网络的更新方法也更胜一筹，和表格中直接更新值的做法不同，神经网络通过损失函数和反向传播的结合来实现权重更新。我们选取目标Q值和当前Q值差的平方和作为损失函数，“目标”值在计算之后其梯度会反馈于网络上。在理想的情况下，每一步之后的Q值应当都是不变的（当然如果一步一刮风的情况就不一定了～）</p>
+<blockquote>
+<p>Eq2. Loss = ∑(Q-target - Q)²</p>
+</blockquote>
+<p>下面给出我们的简易Q网络的TensorFlow集成：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> gym</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> random</div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line">%matplotlib inline</div><div class="line"></div><div class="line"><span class="comment"># 加载实验环境</span></div><div class="line">env = gym.make(<span class="string">'FrozenLake-v0'</span>)</div><div class="line"><span class="comment"># Q网络解法</span></div><div class="line">tf.reset_default_graph()</div><div class="line"><span class="comment"># 建立用于选择行为的网络的前向传播部分</span></div><div class="line">inputs1 = tf.placeholder(shape=[<span class="number">1</span>,<span class="number">16</span>], dtype=tf.float32)</div><div class="line">W = tf.Variable(tf.random_uniform([<span class="number">16</span>,<span class="number">4</span>], <span class="number">0</span>, <span class="number">0.01</span>))</div><div class="line">Qout = tf.matmul(inputs1, W)</div><div class="line">predict = tf.argmax(Qout, <span class="number">1</span>)</div><div class="line"><span class="comment"># 计算预期Q值和目标Q值的差值平方和（损失值）</span></div><div class="line">nextQ = tf.placeholder(shape=[<span class="number">1</span>,<span class="number">4</span>], dtype=tf.float32)</div><div class="line">loss = tf.reduce_sum(tf.square(nextQ - Qout))</div><div class="line">trainer = tf.train.GradientDescentOptimizer(learning_rate=<span class="number">0.1</span>)</div><div class="line">updateModel = trainer.minimize(loss)</div><div class="line"><span class="comment"># 训练网络</span></div><div class="line">init = tf.initialize_all_variables()</div><div class="line"><span class="comment"># 设置超参数</span></div><div class="line">y = <span class="number">.99</span></div><div class="line">e = <span class="number">0.1</span></div><div class="line">num_episodes = <span class="number">2000</span> <span class="comment"># 为了快速设置为2000，实验调为20000时可以达到0.6的成功率</span></div><div class="line"><span class="comment"># 创建episodes中包含当前奖励值和步骤的列表</span></div><div class="line">jList = []</div><div class="line">rList = []</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(init)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_episodes):</div><div class="line">        <span class="comment"># 初始化环境，得到第一个状态观测值</span></div><div class="line">        s = env.reset()</div><div class="line">        rAll = <span class="number">0</span></div><div class="line">        d = <span class="keyword">False</span></div><div class="line">        j = <span class="number">0</span></div><div class="line">        <span class="comment"># Q网络</span></div><div class="line">        <span class="keyword">while</span> j &lt; <span class="number">99</span>:</div><div class="line">            j += <span class="number">1</span></div><div class="line">            <span class="comment"># 根据Q网络和贪心算法(有随机行动的可能)选定当前的动作</span></div><div class="line">            a, allQ = sess.run([predict, Qout], feed_dict=&#123;inputs1:np.identity(<span class="number">16</span>)[s:s+<span class="number">1</span>]&#125;)</div><div class="line">            <span class="keyword">if</span> np.random.rand(<span class="number">1</span>) &lt; e:</div><div class="line">                a[<span class="number">0</span>] = env.action_space.sample()</div><div class="line">            <span class="comment"># 获取新的状态值和奖励值</span></div><div class="line">            s1, r, d, _ = env.step(a[<span class="number">0</span>])</div><div class="line">            <span class="comment"># 通过将新的状态值传入网络获取Q'值</span></div><div class="line">            Q1 = sess.run(Qout, feed_dict=&#123;inputs1:np.identity(<span class="number">16</span>)[s1:s1+<span class="number">1</span>]&#125;)</div><div class="line">            <span class="comment"># 获取最大的Q值并选定我们的动作</span></div><div class="line">            maxQ1 = np.max(Q1)</div><div class="line">            targetQ = allQ</div><div class="line">            targetQ[<span class="number">0</span>, a[<span class="number">0</span>]] = r + y*maxQ1</div><div class="line">            <span class="comment"># 用目标Q值和预测Q值训练网络</span></div><div class="line">            _, W1 = sess.run([updateModel, W], feed_dict=&#123;inputs1:np.identity(<span class="number">16</span>)[s:s+<span class="number">1</span>], nextQ:targetQ&#125;)</div><div class="line">            rAll += r</div><div class="line">            s = s1</div><div class="line">            <span class="keyword">if</span> d == <span class="keyword">True</span>:</div><div class="line">                <span class="comment"># 随着训练的进行不断减小随机行动的可能性</span></div><div class="line">                e = <span class="number">1.</span>/((i/<span class="number">50</span>) + <span class="number">10</span>)</div><div class="line">                <span class="keyword">break</span></div><div class="line">        jList.append(j)</div><div class="line">        rList.append(rAll)</div><div class="line">print(<span class="string">"Percent of succesful episodes: "</span> + str(sum(rList)/num_episodes))</div><div class="line"><span class="comment"># 网络性能统计</span></div><div class="line">plt.plot(rList)</div><div class="line">plt.plot(jList)</div></pre></td></tr></table></figure>
+<p>虽然这个网络可以解决FrozenLake的问题，但是效率远远不及Q表。在Q-Learning中神经网络解法的灵活性是以牺牲稳定性的代价换来的。在我们上面简单的网络的基础上，我们有很多可供选择的扩展来提供更好的性能和更健壮的学习。这里特别强调两个方法：历程重现（Experience Replay）和目标网络冻结（Freezing Target Networks），这些调整和提升是深度Q网络能够玩转雅达利游戏的关键，这些部分我们在后面会一一提及。如果想进一步了解Q-Learning背后的理论基础，可以参考<a href="http://neuro.cs.ut.ee/demystifying-deep-reinforcement-learning/" target="_blank" rel="external">Tambet Matiisen的这篇文章</a>。希望这篇文章可以帮助到对Q-Learning算法感兴趣的同学：)</p>
+<p>译者计划翻译的系列文章：</p>
+<ol>
+<li>（0）Q-Learning的查找表实现和神经网络实现</li>
+<li>Part 1 — Two-Armed Bandit</li>
+<li>Part 1.5 — Contextual Bandits</li>
+<li>Part 2 — Policy-Based Agents</li>
+<li>Part 3 — Model-Based RL</li>
+<li>Part 4 — Deep Q-Networks and Beyond</li>
+<li>Part 5 — Visualizing an Agent’s Thoughts and Actions</li>
+<li>Part 6 — Partial Observability and Deep Recurrent Q-Networks</li>
+<li>Part 7 — Action-Selection Strategies for Exploration</li>
+<li>Part 8 — Asynchronous Actor-Critic Agents (A3C)</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>您的打赏是对我最大的鼓励！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://oj3kr01vo.bkt.clouddn.com/wechat_pay_github.jpg" alt="ArrayZoneYour WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://oj3kr01vo.bkt.clouddn.com/ali_pay_github.jpg" alt="ArrayZoneYour Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/强化学习/" rel="tag">#强化学习</a>
+          
+            <a href="/tags/Q-Learning/" rel="tag">#Q-Learning</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/19/A3T-对抗性增强的对抗性训练/" rel="next" title="A3T:对抗性增强的对抗性训练">
+                <i class="fa fa-chevron-left"></i> A3T:对抗性增强的对抗性训练
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2018/02/21/TensorFlow强化学习入门（0）——基于查找表和神经网络的Q-Learning/"
+           data-title="TensorFlow强化学习入门（0）——Q-Learning的查找表实现和神经网络实现" data-url="https://arrayzoneyour.github.io/2018/02/21/TensorFlow强化学习入门（0）——基于查找表和神经网络的Q-Learning/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ArrayZoneYour" />
+          <p class="site-author-name" itemprop="name">ArrayZoneYour</p>
+          <p class="site-description motion-element" itemprop="description">奇妙的事情每天都在发生</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#查找表实现"><span class="nav-number">1.</span> <span class="nav-text">查找表实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#神经网络实现"><span class="nav-number">2.</span> <span class="nav-text">神经网络实现</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ArrayZoneYour</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ArrayZoneYour"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

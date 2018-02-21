@@ -241,6 +241,256 @@
             
               
                 
+                <a class="post-title-link" href="/2017/01/16/JWT-AUTH/" itemprop="url">
+                  Laravel-Angular-Material中文文档——JWT AUTH
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-16T15:40:32+08:00" content="2017-01-16">
+              2017-01-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Laravel-Angular-Material中文文档/" itemprop="url" rel="index">
+                    <span itemprop="name">Laravel-Angular-Material中文文档</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/16/JWT-AUTH/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/16/JWT-AUTH/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h2><p>当你使用<code>composer create-project</code>来安装时，下面的命令也将执行<br><code>php artisan jwt:generate</code><br>它将生成JWT运行所需的<code>JWT_SECRET</code>  </p>
+<p>JSON Web Token是无状态的，这也是为什么我们从不把它储存在数据库的原因</p>
+<p>JWT认证的样本代码在<code>LoginController</code>中有提供<br>你的API知道，如果用户发送了<code>Authorization: Bearer {token}</code>的头，这个用户是经过验证的。<br>这已经在API Service中为你自动配置</p>
+<blockquote>
+<p>推荐你将<code>config/jwt</code>中生成的token移至<code>.env</code>中，这个问题将在下一个版本中修复</p>
+<p>如果你想修改默认的验证模型，确保你更新了<code>config/jwt.php</code>中的内容来匹配你做的改动。特别是你想要更新<code>user</code> &amp; <code>identifier</code>的时候。</p>
+</blockquote>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/16/JWT-AUTH/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/16/REST-API/" itemprop="url">
+                  Laravel-Angular-Material中文文档——REST API
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-16T15:37:29+08:00" content="2017-01-16">
+              2017-01-16
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Laravel-Angular-Material中文文档/" itemprop="url" rel="index">
+                    <span itemprop="name">Laravel-Angular-Material中文文档</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/16/REST-API/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/16/REST-API/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在现代的web app中REST API是一个被频繁使用的功能。<br>这也是为什么我们专注于使这个过程保持一致。<br>这可以使你在你的API中更加方便地开发新的接口。<br>打比方来说，在RestAngular中验证错误会自动展示。<br>Laravel Angular Material Starter可以帮助你更好地规范API返回的数据格式<br>错误响应对应着一个具体的格式，成功的响应对应另一个。<br>前端也会受益于这种一致性，通过配置响应拦截器，在接受到错误的返回后它可以自动弹出一个验证错误的弹出层<br>所有这一切都提供了可选的<a href="https://laravel-angular.readme.io/v3.4/docs/jwt-authenticated-routes">Json Web Token Authentication</a>支持和有用的<a href="https://laravel-angular.readme.io/v3.4/docs/api-test-helpers">API test helpers</a>，这将使集成测试更容易。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/16/REST-API/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/16/PROGRESSIVE-WEB-APP/" itemprop="url">
                   Laravel-Angular-Material中文文档——PROGRESSIVE WEB APP
                 </a>
@@ -879,7 +1129,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">17</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -887,7 +1137,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -896,7 +1146,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
