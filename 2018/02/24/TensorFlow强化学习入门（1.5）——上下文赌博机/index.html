@@ -1,0 +1,690 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="强化学习,上下文赌博机," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="Arthur JulianiSimple Reinforcement Learning with Tensorflow Part 1.5: Contextual Bandits
+
+
+注意：本文为该系类文章中（1）和（2）之间的过渡
+
+在上一篇文章中我们简要介绍了强化学习并构建了一个简单的agent来解决多臂赌博机问题。在多臂赌博机问题中agent不需要考虑所处环境的状态，只要通过学习确定那一个行动">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow强化学习入门（1.5）——上下文赌博机">
+<meta property="og:url" content="https://arrayzoneyour.github.io/2018/02/24/TensorFlow强化学习入门（1.5）——上下文赌博机/index.html">
+<meta property="og:site_name" content="ArrayZoneYour">
+<meta property="og:description" content="Arthur JulianiSimple Reinforcement Learning with Tensorflow Part 1.5: Contextual Bandits
+
+
+注意：本文为该系类文章中（1）和（2）之间的过渡
+
+在上一篇文章中我们简要介绍了强化学习并构建了一个简单的agent来解决多臂赌博机问题。在多臂赌博机问题中agent不需要考虑所处环境的状态，只要通过学习确定那一个行动">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1000/1*_xuyp-saH47EYAtzul56Ww.jpeg">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*3NziBtrANN6UVltplxwaGA.png">
+<meta property="og:updated_time" content="2018-02-24T11:33:55.468Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TensorFlow强化学习入门（1.5）——上下文赌博机">
+<meta name="twitter:description" content="Arthur JulianiSimple Reinforcement Learning with Tensorflow Part 1.5: Contextual Bandits
+
+
+注意：本文为该系类文章中（1）和（2）之间的过渡
+
+在上一篇文章中我们简要介绍了强化学习并构建了一个简单的agent来解决多臂赌博机问题。在多臂赌博机问题中agent不需要考虑所处环境的状态，只要通过学习确定那一个行动">
+<meta name="twitter:image" content="https://cdn-images-1.medium.com/max/1000/1*_xuyp-saH47EYAtzul56Ww.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6269340096407799000',
+      author: 'ArrayZoneYour'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://arrayzoneyour.github.io/2018/02/24/TensorFlow强化学习入门（1.5）——上下文赌博机/"/>
+
+
+  <title> TensorFlow强化学习入门（1.5）——上下文赌博机 | ArrayZoneYour </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">ArrayZoneYour</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">自由自在，无忧无虑的小天地</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                TensorFlow强化学习入门（1.5）——上下文赌博机
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-02-24T15:54:09+08:00" content="2018-02-24">
+              2018-02-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/强化学习/" itemprop="url" rel="index">
+                    <span itemprop="name">强化学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/02/24/TensorFlow强化学习入门（1.5）——上下文赌博机/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/02/24/TensorFlow强化学习入门（1.5）——上下文赌博机/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote><footer><strong>Arthur Juliani</strong><cite><a href="https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-1-5-contextual-bandits-bff01d1aad9c" target="_blank" rel="external">Simple Reinforcement Learning with Tensorflow Part 1.5: Contextual Bandits</a></cite></footer></blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/1000/1*_xuyp-saH47EYAtzul56Ww.jpeg" alt=""></p>
+<blockquote>
+<p>注意：本文为该系类文章中（1）和（2）之间的过渡</p>
+</blockquote>
+<p>在上一篇文章中我们简要介绍了强化学习并构建了一个简单的agent来解决多臂赌博机问题。在多臂赌博机问题中agent不需要考虑所处环境的状态，只要通过学习确定那一个行动是最优的即可。在不考虑环境状态时，任一时间点上的最优决策是所有时刻最优的决策。在本文结束后，我们会建立一个完备的强化学习问题：问题中存在环境状态并且下一时刻的状态取决于上一步的行动，决策的收益也是延迟发放的。</p>
+<p>从无状态的场景迁移到完备的强化学习需要解决很多问题，下面我将提供一个实例并展示如何解决它。希望新接触到强化学习的同学可以从这个过程中有所收获。<strong>本文中我将着重讲解什么是状态，但本文中的状态不是由之前的状态和行动决定的。</strong>延迟收益的问题本文也不做讨论，这两个问题都将留到下篇文章解决。本文这种强化学习问题的简化版本又被称为上下文赌博机问题。</p>
+<a id="more"></a>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*3NziBtrANN6UVltplxwaGA.png" alt="上：多臂赌博机问题，收益只受行动的影响。中：上下文赌博机问题，行动和状态共同决定收益。下：完备的强化学习问题，行为影响状态，收益延迟发放"></p>
+<h2 id="上下文赌博机"><a href="#上下文赌博机" class="headerlink" title="上下文赌博机"></a>上下文赌博机</h2><p>在上文讨论的多臂赌博机问题中，我们只有一个赌博机，可以理解为一台老虎机。agent的决策范围只是选择多个的赌博机臂中的一个，不同的决策对应获得+1或-1收益概率的不同。当我们的agent总是选择获得正收益概率最大的机臂时，我们认为这个问题得到了解决。因为所有的决策和结果都不会影响环境状态，所以我们在设计agent的时候忽略了环境状态。</p>
+<p>上下文赌博机引入了 <em>状态</em> 的概念。agent可以利用状态中对环境的表述作出更加明智的决策。在引入这个概念之后，我们把之前的单个赌博机扩展为多个赌博机。环境状态可以告诉我们我们当前使用的是什么样的赌博机，这个agent的目标从对单个赌博机作出最优决策变为对任意数量的赌博机作出最优决策。因为不同赌博机的赌博机臂会有不同的赔率，所以我们的agent需要基于环境状态作出决策，否则它不能在所有的情况下都获得最大的收益。为了解决这一问题，我们将用TensorFlow构架一个单层神经网络来接受状态变量并作出相应行动。通过策略梯度的更新方法，我们可以使网络学会作出收益最大的行动。下面给出示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> tensorflow.contrib.slim <span class="keyword">as</span> slim</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># 定义我们的上下文赌博机</span></div><div class="line"><span class="comment"># 在本例中，我们创建三个四臂赌博机，即每个赌博机有四个机臂供选择，每个赌博机的机臂有着不同的赔率。</span></div><div class="line"><span class="comment"># pullBandit函数用于生成均值为0的正态分布的随机数。bandit的值越小，得到正收益的概率越大。</span></div><div class="line"><span class="comment"># 我们的目标：agent可以根据给定的赌博机选择收益率最大的赌博机臂</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">contextual_bandit</span><span class="params">()</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.state = <span class="number">0</span></div><div class="line">        <span class="comment"># 设定我们的赌博机，收益率最大的赌博机臂编号分别为4，2，1</span></div><div class="line">        self.bandits = np.array([[<span class="number">0.2</span>, <span class="number">0</span>, <span class="number">-0.0</span>, <span class="number">-5</span>], [<span class="number">0.1</span>, <span class="number">-5</span>, <span class="number">1</span>, <span class="number">0.25</span>], [<span class="number">-5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>]])</div><div class="line">        self.num_bandits = self.bandits.shape[<span class="number">0</span>]</div><div class="line">        self.num_actions = self.bandits.shape[<span class="number">1</span>]</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getBandit</span><span class="params">(self)</span>:</span></div><div class="line">        self.state = np.random.randint(<span class="number">0</span>, len(self.bandits))</div><div class="line">        <span class="comment"># 每个episode返回一个随机的状态</span></div><div class="line">        <span class="keyword">return</span> self.state</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pullArm</span><span class="params">(self, action)</span>:</span></div><div class="line">        <span class="comment"># 生成随机数</span></div><div class="line">        bandit = self.bandits[self.state, action]</div><div class="line">        result = np.random.randn(<span class="number">1</span>)</div><div class="line">        <span class="keyword">if</span> result &gt; bandit:</div><div class="line">            <span class="comment"># 返回正收益</span></div><div class="line">            <span class="keyword">return</span> <span class="number">1</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="comment"># 返回负收益</span></div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># 基于策略的Agent</span></div><div class="line"><span class="comment"># 下面创建我们的agent的神经网络，state（状态）为网络输入，这使得agent可以根据环境状态行动，这一提升也是该网络适用与完备强化学习的关键改动。</span></div><div class="line"><span class="comment"># agent使用了一个简单的权重集，据此它可以为选定的赌博机返回价值预估，我们使用策略梯度方法来更新agent</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">agent</span><span class="params">()</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, lr, s_size, a_size)</span>:</span></div><div class="line">        <span class="comment"># 前馈部分，网络接受状态值，作出决策</span></div><div class="line">        self.state_in = tf.placeholder(shape=[<span class="number">1</span>], dtype=tf.int32)</div><div class="line">        state_in_OH = slim.one_hot_encoding(self.state_in, s_size)</div><div class="line">        output = slim.fully_connected(state_in_OH, a_size, biases_initializer=<span class="keyword">None</span>, activation_fn=tf.nn.sigmoid, weights_initializer=tf.ones_initializer())</div><div class="line">        self.output = tf.reshape(output, [<span class="number">-1</span>])</div><div class="line">        self.chosen_action = tf.argmax(self.output, <span class="number">0</span>)</div><div class="line">        </div><div class="line">        <span class="comment"># 训练流程，我们将得到的收益和行为送入网络来计算损失值并据此更新网络</span></div><div class="line">        self.reward_holder = tf.placeholder(shape=[<span class="number">1</span>], dtype=tf.float32)</div><div class="line">        self.action_holder = tf.placeholder(shape=[<span class="number">1</span>], dtype=tf.int32)</div><div class="line">        self.responsible_weight = tf.slice(self.output, self.action_holder, [<span class="number">1</span>])</div><div class="line">        self.loss = -(tf.log(self.responsible_weight)*self.reward_holder)</div><div class="line">        optimizer = tf.train.GradientDescentOptimizer(learning_rate=lr)</div><div class="line">        self.update = optimizer.minimize(self.loss)</div><div class="line"></div><div class="line"><span class="comment"># 训练网络</span></div><div class="line">tf.reset_default_graph() <span class="comment"># 重置TensorFlow计算图</span></div><div class="line"></div><div class="line">cBandit = contextual_bandit() <span class="comment"># 加载赌博机</span></div><div class="line">myAgent = agent(lr=<span class="number">0.001</span>, s_size=cBandit.num_bandits, a_size=cBandit.num_actions) <span class="comment"># 加载agent</span></div><div class="line">weights = tf.trainable_variables()[<span class="number">0</span>] <span class="comment"># 权重</span></div><div class="line"></div><div class="line">total_episodes = <span class="number">10000</span> <span class="comment"># 设置agent训练的episodes数</span></div><div class="line">total_reward = np.zeros([cBandit.num_bandits, cBandit.num_actions]) <span class="comment"># 初始化分数</span></div><div class="line">e = <span class="number">0.1</span> <span class="comment"># 随机行动概率</span></div><div class="line"></div><div class="line">init = tf.global_variables_initializer()</div><div class="line"></div><div class="line"><span class="comment"># 启动TensorFlow计算图</span></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(init)</div><div class="line">    i = <span class="number">0</span></div><div class="line">    <span class="keyword">while</span> i &lt; total_episodes:</div><div class="line">        s = cBandit.getBandit() <span class="comment"># 获取环境状态</span></div><div class="line">        <span class="comment"># 决定是根据网络选择赌博机还是随机选择赌博机</span></div><div class="line">        <span class="keyword">if</span> np.random.rand(<span class="number">1</span>) &lt; e:</div><div class="line">            action = np.random.randint(cBandit.num_actions)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            action = sess.run(myAgent.chosen_action, feed_dict=&#123;myAgent.state_in:[s]&#125;)</div><div class="line">            reward = cBandit.pullArm(action) <span class="comment"># 行动并返回收益</span></div><div class="line">            <span class="comment"># 更新网络</span></div><div class="line">            feed_dict=&#123;myAgent.reward_holder:[reward], myAgent.action_holder:[action], myAgent.state_in:[s]&#125;</div><div class="line">            _, ww = sess.run([myAgent.update, weights], feed_dict=feed_dict)</div><div class="line">            <span class="comment"># 更新本次运行的得分</span></div><div class="line">            total_reward[s, action] += reward</div><div class="line">            <span class="keyword">if</span> i % <span class="number">500</span> == <span class="number">0</span>:</div><div class="line">                print(str(cBandit.num_bandits) + <span class="string">"台赌博机的平均得分: "</span> + str(np.mean(total_reward, axis=<span class="number">1</span>)))</div><div class="line">            i += <span class="number">1</span></div><div class="line"><span class="keyword">for</span> a <span class="keyword">in</span> range(cBandit.num_bandits):</div><div class="line">    print(<span class="string">"我们的agent认为"</span> + str(np.argmax(ww[a])+<span class="number">1</span>) + <span class="string">"号机臂对于"</span> + str(a+<span class="number">1</span>) + <span class="string">" 号赌博机是最优决策"</span>)</div><div class="line">    <span class="keyword">if</span> np.argmax(ww[a]) == np.argmin(cBandit.bandits[a]):</div><div class="line">        print(<span class="string">"...经检验正确！"</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        print(<span class="string">"...经检验错误！"</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">3台赌博机的平均得分: [-0.25  0.    0.  ]</div><div class="line">3台赌博机的平均得分: [39.25 43.75 39.25]</div><div class="line">3台赌博机的平均得分: [86.25 79.75 81.25]</div><div class="line">3台赌博机的平均得分: [126.75 119.5  126.  ]</div><div class="line">3台赌博机的平均得分: [164.25 159.5  173.5 ]</div><div class="line">3台赌博机的平均得分: [208.25 204.75 209.25]</div><div class="line">3台赌博机的平均得分: [249.5  244.25 253.5 ]</div><div class="line">3台赌博机的平均得分: [290.5  285.   296.75]</div><div class="line">3台赌博机的平均得分: [334.   323.   340.25]</div><div class="line">3台赌博机的平均得分: [378.   368.25 376.  ]</div><div class="line">3台赌博机的平均得分: [418.75 408.75 419.75]</div><div class="line">3台赌博机的平均得分: [464.   450.75 457.5 ]</div><div class="line">3台赌博机的平均得分: [506.75 493.   497.5 ]</div><div class="line">3台赌博机的平均得分: [550.75 534.75 536.75]</div><div class="line">3台赌博机的平均得分: [590.5  579.5  577.25]</div><div class="line">3台赌博机的平均得分: [632.   620.25 620.  ]</div><div class="line">3台赌博机的平均得分: [672.   659.75 665.5 ]</div><div class="line">3台赌博机的平均得分: [714.   698.75 709.5 ]</div><div class="line">3台赌博机的平均得分: [756.75 739.   751.5 ]</div><div class="line">3台赌博机的平均得分: [798.   779.   795.25]</div><div class="line">我们的agent认为4号机臂对于1 号赌博机是最优决策</div><div class="line">...经检验正确！</div><div class="line">我们的agent认为2号机臂对于2 号赌博机是最优决策</div><div class="line">...经检验正确！</div><div class="line">我们的agent认为1号机臂对于3 号赌博机是最优决策</div><div class="line">...经检验正确！</div></pre></td></tr></table></figure>
+<p>希望这篇文章可以帮助你直观地理解强化学习中agent如何处理复杂的交互问题。掌握本文中的内容之后，你可以在下一篇文章中进一步探索时间和行为共同作用的问题。</p>
+<p>系列文章（翻译进度）：</p>
+<ol>
+<li><a href="https://arrayzoneyour.github.io/2018/02/21/TensorFlow%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%EF%BC%880%EF%BC%89%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E%E6%9F%A5%E6%89%BE%E8%A1%A8%E5%92%8C%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84Q-Learning/">(0) Q-Learning的查找表实现和神经网络实现</a></li>
+<li>(1) 双臂赌博机</li>
+<li>(1.5) — 上下文赌博机</li>
+<li>Part 2 — Policy-Based Agents</li>
+<li>Part 3 — Model-Based RL</li>
+<li>Part 4 — Deep Q-Networks and Beyond</li>
+<li>Part 5 — Visualizing an Agent’s Thoughts and Actions</li>
+<li>Part 6 — Partial Observability and Deep Recurrent Q-Networks</li>
+<li>Part 7 — Action-Selection Strategies for Exploration</li>
+<li>Part 8 — Asynchronous Actor-Critic Agents (A3C)</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>您的打赏是对我最大的鼓励！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://oj3kr01vo.bkt.clouddn.com/wechat_pay_github.jpg" alt="ArrayZoneYour WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://oj3kr01vo.bkt.clouddn.com/ali_pay_github.jpg" alt="ArrayZoneYour Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/强化学习/" rel="tag">#强化学习</a>
+          
+            <a href="/tags/上下文赌博机/" rel="tag">#上下文赌博机</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/22/TensorFlow强化学习入门（1）——双臂赌博机/" rel="next" title="TensorFlow强化学习入门（1）——双臂赌博机">
+                <i class="fa fa-chevron-left"></i> TensorFlow强化学习入门（1）——双臂赌博机
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/25/TensorFlow强化学习入门（2）——基于策略的Agents/" rel="prev" title="TensorFlow强化学习入门（2）——基于策略的Agents">
+                TensorFlow强化学习入门（2）——基于策略的Agents <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2018/02/24/TensorFlow强化学习入门（1.5）——上下文赌博机/"
+           data-title="TensorFlow强化学习入门（1.5）——上下文赌博机" data-url="https://arrayzoneyour.github.io/2018/02/24/TensorFlow强化学习入门（1.5）——上下文赌博机/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ArrayZoneYour" />
+          <p class="site-author-name" itemprop="name">ArrayZoneYour</p>
+          <p class="site-description motion-element" itemprop="description">奇妙的事情每天都在发生</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">20</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#上下文赌博机"><span class="nav-number">1.</span> <span class="nav-text">上下文赌博机</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ArrayZoneYour</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ArrayZoneYour"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

@@ -241,7 +241,131 @@
             
               
                 
-                <a class="post-title-link" href="/2018/02/24/TensorFlow强化学习入门（2）——上下文赌博机/" itemprop="url">
+                <a class="post-title-link" href="/2018/02/25/TensorFlow强化学习入门（2）——基于策略的Agents/" itemprop="url">
+                  TensorFlow强化学习入门（2）——基于策略的Agents
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-02-25T08:45:35+08:00" content="2018-02-25">
+              2018-02-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/强化学习/" itemprop="url" rel="index">
+                    <span itemprop="name">强化学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/02/25/TensorFlow强化学习入门（2）——基于策略的Agents/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/02/25/TensorFlow强化学习入门（2）——基于策略的Agents/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote><footer><strong>Arthur Juliani</strong><cite><a href="https://medium.com/@awjuliani/super-simple-reinforcement-learning-tutorial-part-2-ded33892c724">Simple Reinforcement Learning with Tensorflow: Part 2 - Policy-based Agents</a></cite></footer></blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*G_whtIrY9fGlw3It6HFfhA.gif" alt=""></p>
+<p>在本教程系列的（1）中，我演示了如何构建一个agent来在多个选择中选取最有价值的一个。在本文中，我将讲解如何得到一个从现实世界中获取 <em>观测值</em> ，并作出 <em>长期收益</em> 最大的 <em>行动</em> 的agent。正如前文所说，本文解决的问题将是一个完备的强化学习问题。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/02/25/TensorFlow强化学习入门（2）——基于策略的Agents/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/02/24/TensorFlow强化学习入门（1.5）——上下文赌博机/" itemprop="url">
                   TensorFlow强化学习入门（1.5）——上下文赌博机
                 </a>
               
@@ -285,8 +409,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2018/02/24/TensorFlow强化学习入门（2）——上下文赌博机/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/02/24/TensorFlow强化学习入门（2）——上下文赌博机/" itemprop="commentsCount"></span>
+                <a href="/2018/02/24/TensorFlow强化学习入门（1.5）——上下文赌博机/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/02/24/TensorFlow强化学习入门（1.5）——上下文赌博机/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -310,14 +434,15 @@
 
       
         
-          <p><img src="https://cdn-images-1.medium.com/max/1000/1*_xuyp-saH47EYAtzul56Ww.jpeg" alt=""></p>
+          <blockquote><footer><strong>Arthur Juliani</strong><cite><a href="https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-1-5-contextual-bandits-bff01d1aad9c">Simple Reinforcement Learning with Tensorflow Part 1.5: Contextual Bandits</a></cite></footer></blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/1000/1*_xuyp-saH47EYAtzul56Ww.jpeg" alt=""></p>
 <blockquote>
 <p>注意：本文为该系类文章中（1）和（2）之间的过渡</p>
 </blockquote>
 <p>在上一篇文章中我们简要介绍了强化学习并构建了一个简单的agent来解决多臂赌博机问题。在多臂赌博机问题中agent不需要考虑所处环境的状态，只要通过学习确定那一个行动是最优的即可。在不考虑环境状态时，任一时间点上的最优决策是所有时刻最优的决策。在本文结束后，我们会建立一个完备的强化学习问题：问题中存在环境状态并且下一时刻的状态取决于上一步的行动，决策的收益也是延迟发放的。</p>
 <p>从无状态的场景迁移到完备的强化学习需要解决很多问题，下面我将提供一个实例并展示如何解决它。希望新接触到强化学习的同学可以从这个过程中有所收获。<strong>本文中我将着重讲解什么是状态，但本文中的状态不是由之前的状态和行动决定的。</strong>延迟收益的问题本文也不做讨论，这两个问题都将留到下篇文章解决。本文这种强化学习问题的简化版本又被称为上下文赌博机问题。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2018/02/24/TensorFlow强化学习入门（2）——上下文赌博机/#more" rel="contents">
+            <a class="btn" href="/2018/02/24/TensorFlow强化学习入门（1.5）——上下文赌博机/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1312,128 +1437,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/18/新年感悟/" itemprop="url">
-                  新年感悟
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-18T20:25:29+08:00" content="2017-01-18">
-              2017-01-18
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/关于我的那点小信息/" itemprop="url" rel="index">
-                    <span itemprop="name">关于我的那点小信息</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/01/18/新年感悟/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/18/新年感悟/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>不知不觉又是一年过去了，在大学也待了一年半了，回望这一年半，心绪犹如穿不进针眼的毛线，头绪越来越多，也越发通不过那狭窄的孔。<br>一片一片记忆的片段涌上心头，代码也写不下去了，就记录在此吧。但愿明年的我可以一笑释之。<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/18/新年感悟/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1479,7 +1482,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1496,7 +1499,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
