@@ -1,0 +1,675 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="强化学习,仿真环境," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="在上一篇文章中，我演示了如何设计一个基于策略的强化学习agent来解决CartPole任务。在本文中，我们将从另一个角度重新审视这个问题——如何构建仿真环境来提升agent在当前环境下的性能。
+
+如果你还没有阅读本系列之前的文章并且还是强化学习的初学者，我推荐你按照顺序来阅读，文末有之前文章的链接。
+仿真环境是什么，我们为什么要引入仿真环境？在上图中，仿真环境是一个用于模拟真实世界中的动态问题的神">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow强化学习入门（3）——构建仿真环境来进行强化学习">
+<meta property="og:url" content="https://arrayzoneyour.github.io/2018/02/27/TensorFlow强化学习入门（3）——基于模型的RL/index.html">
+<meta property="og:site_name" content="ArrayZoneYour">
+<meta property="og:description" content="在上一篇文章中，我演示了如何设计一个基于策略的强化学习agent来解决CartPole任务。在本文中，我们将从另一个角度重新审视这个问题——如何构建仿真环境来提升agent在当前环境下的性能。
+
+如果你还没有阅读本系列之前的文章并且还是强化学习的初学者，我推荐你按照顺序来阅读，文末有之前文章的链接。
+仿真环境是什么，我们为什么要引入仿真环境？在上图中，仿真环境是一个用于模拟真实世界中的动态问题的神">
+<meta property="og:image" content="https://ask.qcloudimg.com/draft/410635/f0z4pgk8h0.png">
+<meta property="og:updated_time" content="2018-02-27T13:13:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TensorFlow强化学习入门（3）——构建仿真环境来进行强化学习">
+<meta name="twitter:description" content="在上一篇文章中，我演示了如何设计一个基于策略的强化学习agent来解决CartPole任务。在本文中，我们将从另一个角度重新审视这个问题——如何构建仿真环境来提升agent在当前环境下的性能。
+
+如果你还没有阅读本系列之前的文章并且还是强化学习的初学者，我推荐你按照顺序来阅读，文末有之前文章的链接。
+仿真环境是什么，我们为什么要引入仿真环境？在上图中，仿真环境是一个用于模拟真实世界中的动态问题的神">
+<meta name="twitter:image" content="https://ask.qcloudimg.com/draft/410635/f0z4pgk8h0.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '6269340096407799000',
+      author: 'ArrayZoneYour'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://arrayzoneyour.github.io/2018/02/27/TensorFlow强化学习入门（3）——基于模型的RL/"/>
+
+
+  <title> TensorFlow强化学习入门（3）——构建仿真环境来进行强化学习 | ArrayZoneYour </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">ArrayZoneYour</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">自由自在，无忧无虑的小天地</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                TensorFlow强化学习入门（3）——构建仿真环境来进行强化学习
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-02-27T17:08:47+08:00" content="2018-02-27">
+              2018-02-27
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/强化学习/" itemprop="url" rel="index">
+                    <span itemprop="name">强化学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/02/27/TensorFlow强化学习入门（3）——基于模型的RL/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/02/27/TensorFlow强化学习入门（3）——基于模型的RL/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在上一篇文章中，我演示了如何设计一个基于策略的强化学习agent来解决CartPole任务。在本文中，我们将从另一个角度重新审视这个问题——如何构建仿真环境来提升agent在当前环境下的性能。</p>
+<p><img src="https://ask.qcloudimg.com/draft/410635/f0z4pgk8h0.png" alt="Model Network : 建模网络，本文中称为仿真环境"></p>
+<p>如果你还没有阅读本系列之前的文章并且还是强化学习的初学者，我推荐你按照顺序来阅读，文末有之前文章的链接。</p>
+<p>仿真环境是什么，我们为什么要引入仿真环境？在上图中，仿真环境是一个用于模拟真实世界中的动态问题的神经网络。拿我们之前CartPole的问题来说，我们需要一个可以根据之前的位置和行动来预测木棒下次位置的模型。在学习得到一个精确的模型之后，我们每次就可以直接用模型来训练我们的agent而不是必须放在真实环境中训练。当然如果原始的环境就是仿真得到的（像CartPole就模拟了真实世界中的物理情景），我们就不必再这样做了。</p>
+<p>与计算机模拟不同，真实环境的部署需要时间，而且真实世界中的物理法则也使得环境初始化等一系列操作的可行性大幅下降。相反地，通过模型来模拟环境可以节省时间和成本，agent也可以“假想”自己就在真实环境中运动，我们可以直接在这个虚拟的环境中训练决策网络。只要我们的模拟环境足够优秀，agent即使完全在虚拟环境中训练也可以在真实环境中达到很好的性能。</p>
+<a id="more"></a>
+<p>那么我们如何使用TensorFlow实现这个需求呢？按照我上面所说，我们需要一个能够根据之前的观测和行动转化输出得到新的观测值，收益和状态的神经网络。我们将使用真实环境来训练我们的仿真模型，然后使用仿真模型来训练我们的agent。通过这个方法，我们可以在让agent在不直接接触到真实环境的情况下习得行动策略！下面给出是实现代码（提供版本为评论区重写的版本（译者对代码做了一定修正），作者的原始代码点<a href="https://gist.github.com/awjuliani/1256e7ad7c8ac54051d09963606c8a47#file-rl-tutorial-3-ipynb" target="_blank" rel="external">这里（这个版本有bug，底部有评论指正）</a>查看）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 译者运行环境为jupyterlab，每个分割线对应一个代码块</span></div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line">%matplotlib inline</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"><span class="comment"># --------------------------------------------------</span></div><div class="line"><span class="keyword">import</span> gym</div><div class="line">env = gym.make(<span class="string">"CartPole-v0"</span>)</div><div class="line"><span class="comment"># --------------------------------------------------</span></div><div class="line"><span class="comment"># 超参数</span></div><div class="line">learning_rate = <span class="number">1e-2</span></div><div class="line"><span class="comment"># 收益的折算因子</span></div><div class="line">gamma = <span class="number">0.99</span></div><div class="line"><span class="comment"># RMSProp中的衰减因子</span></div><div class="line">decay_rate = <span class="number">0.99</span></div><div class="line"></div><div class="line">model_batch_size = <span class="number">3</span></div><div class="line">policy_batch_size = <span class="number">3</span></div><div class="line"></div><div class="line">dimen = <span class="number">4</span> <span class="comment"># 环境中的维度数</span></div><div class="line"><span class="comment"># --------------------------------------------------</span></div><div class="line"><span class="comment"># 辅助函数</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">discount</span><span class="params">(r, gamma=<span class="number">0.99</span>, standardize=False)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    输入一维的收益数组，输出折算后的收益值，例：f([1, 1, 1], 0.99) -&gt; [1, 0.99, 0.9801],折算后根据要求选择进行归一化</div><div class="line">    """</div><div class="line">    discounted = np.array([val * (gamma ** i) <span class="keyword">for</span> i, val <span class="keyword">in</span> enumerate(r)])</div><div class="line">    <span class="keyword">if</span> standardize:</div><div class="line">        discounted -= np.mean(discounted)</div><div class="line">        discounted /= np.std(discounted)</div><div class="line">    <span class="keyword">return</span> discounted</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">step_model</span><span class="params">(sess, xs, action)</span>:</span></div><div class="line">    <span class="string">""" 使用神经网络模型根据之前的状态和行动来生成新的状态 """</span></div><div class="line">    <span class="comment"># 上一状态</span></div><div class="line">    x = xs[<span class="number">-1</span>].reshape(<span class="number">1</span>, <span class="number">-1</span>)</div><div class="line">    <span class="comment"># 存储行动</span></div><div class="line">    x = np.hstack([x, [[action]]])</div><div class="line">    <span class="comment"># 预测输出</span></div><div class="line">    output_y = sess.run(predicted_state_m, feed_dict=&#123;input_x_m: x&#125;)</div><div class="line">    <span class="comment"># predicted_state_m == [state_0, state_1, state_2, state_3, reward, done]</span></div><div class="line">    output_next_state = output_y[:,:<span class="number">4</span>]</div><div class="line">    output_reward = output_y[:,<span class="number">4</span>]</div><div class="line">    output_done = output_y[:,<span class="number">5</span>]</div><div class="line">    <span class="comment"># 限制输出范围</span></div><div class="line">    output_next_state[:,<span class="number">0</span>] = np.clip(output_next_state[:,<span class="number">0</span>], <span class="number">-2.4</span>, <span class="number">2.4</span>)</div><div class="line">    output_next_state[:,<span class="number">2</span>] = np.clip(output_next_state[:,<span class="number">2</span>], <span class="number">-0.4</span>, <span class="number">0.4</span>)</div><div class="line">    <span class="comment"># 完成的阀值设置</span></div><div class="line">    output_done = <span class="keyword">True</span> <span class="keyword">if</span> output_done &gt; <span class="number">0.01</span> <span class="keyword">or</span> len(xs) &gt; <span class="number">500</span> <span class="keyword">else</span> <span class="keyword">False</span></div><div class="line">    <span class="keyword">return</span> output_next_state, output_reward, output_done</div><div class="line"><span class="comment"># --------------------------------------------------</span></div><div class="line"><span class="comment"># 用于仿真的神经网络</span></div><div class="line"><span class="comment"># 架构</span></div><div class="line"><span class="comment"># 网络中包含两个具有256个神经元的层，relu函数为激活函数。共有三个输出层，分别输出下一个观测值，收益值和游戏结束的标志</span></div><div class="line">tf.reset_default_graph()</div><div class="line"></div><div class="line">num_hidden_m = <span class="number">256</span></div><div class="line"><span class="comment"># 由于要输入决策网络输出的行动，维度+1</span></div><div class="line">dimen_m = dimen + <span class="number">1</span></div><div class="line"><span class="comment"># 输入占位符</span></div><div class="line">input_x_m = tf.placeholder(tf.float32, [<span class="keyword">None</span>, dimen_m])</div><div class="line"><span class="comment"># 第一层</span></div><div class="line">W1_m = tf.get_variable(<span class="string">"W1_m"</span>, shape=[dimen_m, num_hidden_m], initializer=tf.contrib.layers.xavier_initializer())</div><div class="line">B1_m = tf.Variable(tf.zeros([num_hidden_m]), name=<span class="string">"B1M"</span>)</div><div class="line">layer1_m = tf.nn.relu(tf.matmul(input_x_m, W1_m) + B1_m)</div><div class="line"><span class="comment"># 第二层</span></div><div class="line">W2_m = tf.get_variable(<span class="string">"W2_m"</span>, shape=[num_hidden_m, num_hidden_m], initializer=tf.contrib.layers.xavier_initializer())</div><div class="line">B2_m = tf.Variable(tf.zeros([num_hidden_m]), name=<span class="string">"B2_m"</span>)</div><div class="line">layer2_m = tf.nn.relu(tf.matmul(layer1_m, W2_m) + B2_m)</div><div class="line"><span class="comment"># 第三层（输出层）</span></div><div class="line"><span class="comment"># 注意这里有三个单独的输出层</span></div><div class="line">W_obs_m = tf.get_variable(<span class="string">"W_obs_m"</span>, shape=[num_hidden_m, <span class="number">4</span>], initializer=tf.contrib.layers.xavier_initializer())</div><div class="line">B_obs_m = tf.Variable(tf.zeros([<span class="number">4</span>]), name=<span class="string">"B_obs_m"</span>)</div><div class="line">W_reward_m = tf.get_variable(<span class="string">"W_reward_m"</span>, shape=[num_hidden_m, <span class="number">1</span>], initializer=tf.contrib.layers.xavier_initializer())</div><div class="line">B_reward_m = tf.Variable(tf.zeros([<span class="number">1</span>]), name=<span class="string">"B_reward_m"</span>)</div><div class="line">W_done_m = tf.get_variable(<span class="string">"W_done_m"</span>, shape=[num_hidden_m, <span class="number">1</span>], initializer=tf.contrib.layers.xavier_initializer())</div><div class="line">B_done_m = tf.Variable(tf.zeros([<span class="number">1</span>]), name=<span class="string">"B_done_m"</span>)</div><div class="line"></div><div class="line">output_obs_m = tf.matmul(layer2_m, W_obs_m) + B_obs_m</div><div class="line">output_reward_m = tf.matmul(layer2_m, W_reward_m) + B_reward_m</div><div class="line">output_done_m = tf.sigmoid(tf.matmul(layer2_m, W_done_m) + B_done_m)</div><div class="line"></div><div class="line"><span class="comment"># 训练所需的输入占位符</span></div><div class="line">actual_obs_m = tf.placeholder(tf.float32, [<span class="keyword">None</span>, dimen_m], name=<span class="string">"actual_obs"</span>)</div><div class="line">actual_reward_m = tf.placeholder(tf.float32, [<span class="keyword">None</span>, <span class="number">1</span>], name=<span class="string">"actual_reward"</span>)</div><div class="line">actual_done_m = tf.placeholder(tf.float32, [<span class="keyword">None</span>, <span class="number">1</span>], name=<span class="string">"actual_done"</span>)</div><div class="line"></div><div class="line"><span class="comment"># 整合输出</span></div><div class="line">predicted_state_m = tf.concat([output_obs_m, output_reward_m, output_done_m], axis=<span class="number">1</span>)</div><div class="line"></div><div class="line"><span class="comment"># 损失函数</span></div><div class="line">loss_obs_m = tf.square(actual_obs_m[<span class="number">-1</span>, <span class="number">0</span>:<span class="number">4</span>] - output_obs_m)</div><div class="line">loss_reward_m = tf.square(actual_reward_m - output_reward_m)</div><div class="line">loss_done_m = -tf.log(actual_done_m * output_done_m + (<span class="number">1</span> - actual_done_m) * (<span class="number">1</span> - output_done_m))</div><div class="line"></div><div class="line"><span class="comment"># 模型损失为三个输出损失的平均值</span></div><div class="line">loss_m = tf.reduce_max(loss_obs_m + loss_reward_m + loss_done_m)</div><div class="line"></div><div class="line">adam_m = tf.train.AdamOptimizer(learning_rate=learning_rate)</div><div class="line">update_m = adam_m.minimize(loss_m)</div><div class="line"><span class="comment"># --------------------------------------------------</span></div><div class="line"><span class="comment"># 决策网络</span></div><div class="line">num_hidden_p = <span class="number">10</span> <span class="comment"># 决策网络中隐藏层神经元个数</span></div><div class="line"></div><div class="line">input_x_p = tf.placeholder(tf.float32, [<span class="keyword">None</span>, dimen], name=<span class="string">"input_x"</span>)</div><div class="line"></div><div class="line"><span class="comment"># 第一层</span></div><div class="line">W1_p = tf.get_variable(<span class="string">"W1"</span>, shape=[dimen,num_hidden_p], </div><div class="line">                     initializer=tf.contrib.layers.xavier_initializer())</div><div class="line">layer1_p = tf.nn.relu(tf.matmul(input_x_p, W1_p))</div><div class="line"></div><div class="line"><span class="comment"># 第二层</span></div><div class="line">W2_p = tf.get_variable(<span class="string">"W2"</span>, shape=[num_hidden_p, <span class="number">1</span>], </div><div class="line">                     initializer=tf.contrib.layers.xavier_initializer())</div><div class="line">output_p = tf.nn.sigmoid(tf.matmul(layer1_p, W2_p))</div><div class="line"></div><div class="line"><span class="comment"># 训练所需的输入占位符</span></div><div class="line">input_y_p = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>, <span class="number">1</span>], name=<span class="string">"input_y"</span>)</div><div class="line">advantages_p = tf.placeholder(tf.float32, shape=[<span class="keyword">None</span>,<span class="number">1</span>], name=<span class="string">"reward_signal"</span>)</div><div class="line"></div><div class="line"><span class="comment"># 损失函数</span></div><div class="line"><span class="comment"># 下面表达式等价于 0 if input_y_p == output_p else 1</span></div><div class="line">log_lik_p = tf.log(input_y_p * (input_y_p - output_p) + </div><div class="line">                 (<span class="number">1</span> - input_y_p) * (input_y_p + output_p))</div><div class="line"></div><div class="line"><span class="comment"># We'll be trying to maximize log liklihood</span></div><div class="line">loss_p = -tf.reduce_mean(log_lik_p * advantages_p)</div><div class="line"></div><div class="line"><span class="comment"># 梯度</span></div><div class="line">W1_grad_p = tf.placeholder(tf.float32,name=<span class="string">"W1_grad"</span>)</div><div class="line">W2_grad_p = tf.placeholder(tf.float32,name=<span class="string">"W2_grad"</span>)</div><div class="line">batch_grad_p = [W1_grad_p, W2_grad_p]</div><div class="line">trainable_vars_p = [W1_p, W2_p]</div><div class="line">grads_p = tf.gradients(loss_p, trainable_vars_p)</div><div class="line"></div><div class="line"><span class="comment"># 优化器</span></div><div class="line">adam_p = tf.train.AdamOptimizer(learning_rate=learning_rate)</div><div class="line"></div><div class="line"><span class="comment"># 更新函数</span></div><div class="line">update_grads_p = adam_p.apply_gradients(zip(batch_grad_p, [W1_p, W2_p]))</div><div class="line"><span class="comment"># --------------------------------------------------</span></div><div class="line"><span class="comment"># 初始化并测试模型运行情况</span></div><div class="line">init = tf.global_variables_initializer()</div><div class="line">sess = tf.Session()</div><div class="line">sess.run(init)</div><div class="line">random_obs = np.random.random(size=[<span class="number">1</span>, env.observation_space.shape[<span class="number">0</span>]])</div><div class="line">random_action = env.action_space.sample()</div><div class="line"></div><div class="line">print(<span class="string">"obs: &#123;&#125;\naction: &#123;&#125;\noutput obs: &#123;&#125;\nouput reward: &#123;&#125;\noutput done: &#123;&#125;\noutput policy: &#123;&#125;"</span>.format(</div><div class="line">        random_obs,</div><div class="line">        random_action,</div><div class="line">        sess.run(output_obs_m,feed_dict=&#123;input_x_m: np.hstack([random_obs, [[random_action]]])&#125;),</div><div class="line">        sess.run(output_reward_m,feed_dict=&#123;input_x_m: np.hstack([random_obs, [[random_action]]])&#125;),</div><div class="line">        sess.run(output_done_m,feed_dict=&#123;input_x_m: np.hstack([random_obs, [[random_action]]])&#125;),</div><div class="line">        sess.run(output_p,feed_dict=&#123;input_x_p: random_obs&#125;)))</div><div class="line"><span class="comment"># --------------------------------------------------</span></div><div class="line"><span class="comment"># 在真实环境中训练</span></div><div class="line">real_rewards = []</div><div class="line">num_episodes = <span class="number">5000</span></div><div class="line"></div><div class="line"><span class="comment"># Trigger used to decide whether we should train from model or from real environment</span></div><div class="line">train_from_model = <span class="keyword">False</span></div><div class="line">train_first_steps = <span class="number">500</span></div><div class="line"></div><div class="line"><span class="comment"># 初始化变量跟踪观测值，收益和行动</span></div><div class="line">observations = np.empty(<span class="number">0</span>).reshape(<span class="number">0</span>,dimen)</div><div class="line">rewards = np.empty(<span class="number">0</span>).reshape(<span class="number">0</span>,<span class="number">1</span>)</div><div class="line">actions = np.empty(<span class="number">0</span>).reshape(<span class="number">0</span>,<span class="number">1</span>)</div><div class="line"></div><div class="line"><span class="comment"># 梯度</span></div><div class="line">grads = np.array([np.zeros(var.get_shape().as_list()) <span class="keyword">for</span> var <span class="keyword">in</span> trainable_vars_p])</div><div class="line"></div><div class="line">num_episode = <span class="number">0</span></div><div class="line"></div><div class="line">observation = env.reset()</div><div class="line"></div><div class="line"><span class="keyword">while</span> num_episode &lt; num_episodes:</div><div class="line">    observation = observation.reshape(<span class="number">1</span>,<span class="number">-1</span>)</div><div class="line">    </div><div class="line">    <span class="comment"># 输出决策</span></div><div class="line">    policy = sess.run(output_p, feed_dict=&#123;input_x_p: observation&#125;)</div><div class="line">    </div><div class="line">    <span class="comment"># 根据策略选定行为，引入一定概率的随机决策</span></div><div class="line">    action = <span class="number">0</span> <span class="keyword">if</span> policy &gt; np.random.uniform() <span class="keyword">else</span> <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="comment"># 跟踪观测值和行动</span></div><div class="line">    observations = np.vstack([observations, observation])</div><div class="line">    actions = np.vstack([actions, action])</div><div class="line">    </div><div class="line">    <span class="comment"># 从仿真环境或者真实环境中获取下一个观测值</span></div><div class="line">    <span class="keyword">if</span> train_from_model:</div><div class="line">        observation, reward, done = step_model(sess, observations, action)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        observation, reward, done, _ = env.step(action)</div><div class="line">        </div><div class="line">    <span class="comment"># 跟踪收益</span></div><div class="line">    rewards = np.vstack([rewards, reward])</div><div class="line">    dones = np.zeros(shape=(len(observations),<span class="number">1</span>))</div><div class="line">    </div><div class="line">    <span class="comment"># 游戏结束或者迭代次数够多</span></div><div class="line">    <span class="keyword">if</span> done <span class="keyword">or</span> len(observations) &gt; <span class="number">300</span>:</div><div class="line">        print(<span class="string">"\r&#123;&#125; / &#123;&#125; "</span>.format(num_episode, num_episodes),end=<span class="string">""</span>)</div><div class="line"></div><div class="line">        <span class="comment"># 判断训练环境</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> train_from_model:</div><div class="line">             <span class="comment"># 训练模型的上一个状态</span></div><div class="line">            states = np.hstack([observations, actions])</div><div class="line">            prev_states = states[:<span class="number">-1</span>,:]</div><div class="line">            next_states = states[<span class="number">1</span>:, :]</div><div class="line">            next_rewards = rewards[<span class="number">1</span>:, :]</div><div class="line">            next_dones = dones[<span class="number">1</span>:, :]</div><div class="line"></div><div class="line">            feed_dict = &#123;input_x_m: prev_states.astype(np.float32), </div><div class="line">                         actual_obs_m: next_states.astype(np.float32),</div><div class="line">                        actual_done_m: next_dones.astype(np.float32),</div><div class="line">                        actual_reward_m: next_rewards.astype(np.float32)&#125;</div><div class="line"></div><div class="line">            loss, _ = sess.run([loss_m, update_m], feed_dict=feed_dict)</div><div class="line">            </div><div class="line">            real_rewards.append(sum(rewards))</div><div class="line">            </div><div class="line">        </div><div class="line">        <span class="comment"># 折算收益</span></div><div class="line">        disc_rewards = discount(rewards, standardize=<span class="keyword">True</span>)</div><div class="line">        </div><div class="line">        <span class="comment"># 计算梯度</span></div><div class="line">        grads += sess.run(grads_p, feed_dict=&#123;input_x_p: observations,</div><div class="line">                                            input_y_p: actions,</div><div class="line">                                            advantages_p: disc_rewards&#125;)</div><div class="line">        </div><div class="line">        num_episode += <span class="number">1</span></div><div class="line">        </div><div class="line">        observation = env.reset()</div><div class="line"></div><div class="line">        <span class="comment"># 重置变量</span></div><div class="line">        observations = np.empty(<span class="number">0</span>).reshape(<span class="number">0</span>,dimen)</div><div class="line">        rewards = np.empty(<span class="number">0</span>).reshape(<span class="number">0</span>,<span class="number">1</span>)</div><div class="line">        actions = np.empty(<span class="number">0</span>).reshape(<span class="number">0</span>,<span class="number">1</span>)</div><div class="line">        </div><div class="line">        <span class="comment"># Toggle between training from model and from real environment allowing sufficient time </span></div><div class="line">        <span class="comment"># to train the model before its used for learning policy</span></div><div class="line">        <span class="keyword">if</span> num_episode &gt; train_first_steps:</div><div class="line">            train_from_model = <span class="keyword">not</span> train_from_model </div><div class="line"></div><div class="line">        <span class="comment"># If batch full</span></div><div class="line">        <span class="keyword">if</span> num_episode % policy_batch_size == <span class="number">0</span>:</div><div class="line">            </div><div class="line">            <span class="comment"># 更新梯度</span></div><div class="line">            sess.run(update_grads_p, feed_dict=&#123;W1_grad_p: grads[<span class="number">0</span>], W2_grad_p: grads[<span class="number">1</span>]&#125;)</div><div class="line">            </div><div class="line">            <span class="comment"># 重置梯度</span></div><div class="line">            grads = np.array([np.zeros(var.get_shape().as_list()) <span class="keyword">for</span> var <span class="keyword">in</span> trainable_vars_p])</div><div class="line">            </div><div class="line">            <span class="comment"># 周期性输出提示信息</span></div><div class="line">            <span class="keyword">if</span> (num_episode % (<span class="number">100</span> * policy_batch_size) == <span class="number">0</span>):</div><div class="line">                print(<span class="string">"Episode &#123;&#125; last batch rewards: &#123;&#125;"</span>.format(</div><div class="line">                        num_episode, sum(real_rewards[-policy_batch_size:])/policy_batch_size))</div><div class="line">            </div><div class="line">            <span class="comment"># 模型性能足够好时退出</span></div><div class="line">            <span class="keyword">if</span> (sum(real_rewards[<span class="number">-10</span>:]) / <span class="number">10.</span> &gt;= <span class="number">190</span>): <span class="comment"># 可以调至199等更高的值（200为满分）</span></div><div class="line">                print(<span class="string">"Episode &#123;&#125; Training complete with total score of: &#123;&#125;"</span>.format(</div><div class="line">                        num_episode, sum(real_rewards[-policy_batch_size:])/policy_batch_size))</div><div class="line">                <span class="keyword">break</span></div><div class="line"><span class="comment"># --------------------------------------------------</span></div><div class="line"><span class="comment"># 测试模型效果</span></div><div class="line"></div><div class="line">observation = env.reset()</div><div class="line">reward_sum = <span class="number">0</span></div><div class="line"></div><div class="line">model_losses = []</div><div class="line"></div><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">    env.render()</div><div class="line">    </div><div class="line">    observation = np.reshape(observation, [<span class="number">1</span>, <span class="number">-1</span>])</div><div class="line">    policy = sess.run(output_p, feed_dict=&#123;input_x_p: observation&#125;)</div><div class="line">    action = <span class="number">0</span> <span class="keyword">if</span> policy &gt; <span class="number">0.5</span> <span class="keyword">else</span> <span class="number">1</span></div><div class="line">    observation, reward, done, _ = env.step(action)</div><div class="line">    reward_sum += reward</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> done:</div><div class="line">        print(<span class="string">"Total score: &#123;&#125;"</span>.format(reward_sum))</div><div class="line">        <span class="keyword">break</span></div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">299 / 5000 Episode 300 last batch rewards: [34.66666667]</div><div class="line">599 / 5000 Episode 600 last batch rewards: [75.66666667]</div><div class="line">899 / 5000 Episode 900 last batch rewards: [61.]</div><div class="line">1199 / 5000 Episode 1200 last batch rewards: [200.]</div><div class="line">1499 / 5000 Episode 1500 last batch rewards: [194.33333333]</div><div class="line">1799 / 5000 Episode 1800 last batch rewards: [169.33333333]</div><div class="line">1979 / 5000 Episode 1980 Training complete with total score of: [200.]</div></pre></td></tr></table></figure>
+<p>到这里，我们引入了两个神经网络，有很多超参数，鼓励读者尝试自己调整超参数来使模型训练更好更快。在下一节我们会探究如何使用卷积神经网络来在更复杂的环境（如雅达利游戏）中学习。</p>
+<p>系列文章（翻译进度）：</p>
+<ol>
+<li><a href="https://arrayzoneyour.github.io/2018/02/21/TensorFlow%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%EF%BC%880%EF%BC%89%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E%E6%9F%A5%E6%89%BE%E8%A1%A8%E5%92%8C%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84Q-Learning/">(0) Q-Learning的查找表实现和神经网络实现</a></li>
+<li><a href="https://arrayzoneyour.github.io/2018/02/25/TensorFlow%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%EF%BC%881%EF%BC%89%E2%80%94%E2%80%94%E5%8F%8C%E8%87%82%E8%B5%8C%E5%8D%9A%E6%9C%BA/">(1) 双臂赌博机</a></li>
+<li><a href="https://arrayzoneyour.github.io/2018/02/24/TensorFlow%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%EF%BC%881.5%EF%BC%89%E2%80%94%E2%80%94%E4%B8%8A%E4%B8%8B%E6%96%87%E8%B5%8C%E5%8D%9A%E6%9C%BA/">(1.5) — 上下文赌博机</a></li>
+<li><a href="https://arrayzoneyour.github.io/2018/02/25/TensorFlow%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8%EF%BC%882%EF%BC%89%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E%E7%AD%96%E7%95%A5%E7%9A%84Agents/">(2) —— 基于策略的Agents</a></li>
+<li>(3) —— 构建仿真环境来进行强化学习</li>
+<li>Part 4 — Deep Q-Networks and Beyond</li>
+<li>Part 5 — Visualizing an Agent’s Thoughts and Actions</li>
+<li>Part 6 — Partial Observability and Deep Recurrent Q-Networks</li>
+<li>Part 7 — Action-Selection Strategies for Exploration</li>
+<li>Part 8 — Asynchronous Actor-Critic Agents (A3C)</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>您的打赏是对我最大的鼓励！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://oj3kr01vo.bkt.clouddn.com/wechat_pay_github.jpg" alt="ArrayZoneYour WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://oj3kr01vo.bkt.clouddn.com/ali_pay_github.jpg" alt="ArrayZoneYour Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/强化学习/" rel="tag">#强化学习</a>
+          
+            <a href="/tags/仿真环境/" rel="tag">#仿真环境</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/25/TensorFlow强化学习入门（2）——基于策略的Agents/" rel="next" title="TensorFlow强化学习入门（2）——基于策略的Agents">
+                <i class="fa fa-chevron-left"></i> TensorFlow强化学习入门（2）——基于策略的Agents
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2018/02/27/TensorFlow强化学习入门（3）——基于模型的RL/"
+           data-title="TensorFlow强化学习入门（3）——构建仿真环境来进行强化学习" data-url="https://arrayzoneyour.github.io/2018/02/27/TensorFlow强化学习入门（3）——基于模型的RL/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="ArrayZoneYour" />
+          <p class="site-author-name" itemprop="name">ArrayZoneYour</p>
+          <p class="site-description motion-element" itemprop="description">奇妙的事情每天都在发生</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ArrayZoneYour</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ArrayZoneYour"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

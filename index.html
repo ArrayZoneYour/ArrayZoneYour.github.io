@@ -241,6 +241,132 @@
             
               
                 
+                <a class="post-title-link" href="/2018/02/27/TensorFlow强化学习入门（3）——基于模型的RL/" itemprop="url">
+                  TensorFlow强化学习入门（3）——构建仿真环境来进行强化学习
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2018-02-27T17:08:47+08:00" content="2018-02-27">
+              2018-02-27
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/强化学习/" itemprop="url" rel="index">
+                    <span itemprop="name">强化学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2018/02/27/TensorFlow强化学习入门（3）——基于模型的RL/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/02/27/TensorFlow强化学习入门（3）——基于模型的RL/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>在上一篇文章中，我演示了如何设计一个基于策略的强化学习agent来解决CartPole任务。在本文中，我们将从另一个角度重新审视这个问题——如何构建仿真环境来提升agent在当前环境下的性能。</p>
+<p><img src="https://ask.qcloudimg.com/draft/410635/f0z4pgk8h0.png" alt="Model Network : 建模网络，本文中称为仿真环境"></p>
+<p>如果你还没有阅读本系列之前的文章并且还是强化学习的初学者，我推荐你按照顺序来阅读，文末有之前文章的链接。</p>
+<p>仿真环境是什么，我们为什么要引入仿真环境？在上图中，仿真环境是一个用于模拟真实世界中的动态问题的神经网络。拿我们之前CartPole的问题来说，我们需要一个可以根据之前的位置和行动来预测木棒下次位置的模型。在学习得到一个精确的模型之后，我们每次就可以直接用模型来训练我们的agent而不是必须放在真实环境中训练。当然如果原始的环境就是仿真得到的（像CartPole就模拟了真实世界中的物理情景），我们就不必再这样做了。</p>
+<p>与计算机模拟不同，真实环境的部署需要时间，而且真实世界中的物理法则也使得环境初始化等一系列操作的可行性大幅下降。相反地，通过模型来模拟环境可以节省时间和成本，agent也可以“假想”自己就在真实环境中运动，我们可以直接在这个虚拟的环境中训练决策网络。只要我们的模拟环境足够优秀，agent即使完全在虚拟环境中训练也可以在真实环境中达到很好的性能。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/02/27/TensorFlow强化学习入门（3）——基于模型的RL/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2018/02/25/TensorFlow强化学习入门（2）——基于策略的Agents/" itemprop="url">
                   TensorFlow强化学习入门（2）——基于策略的Agents
                 </a>
@@ -1308,140 +1434,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/22/WAMP环境搭建/" itemprop="url">
-                  WAMP环境搭建
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-22T21:51:19+08:00" content="2017-01-22">
-              2017-01-22
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Web服务器环境搭建/" itemprop="url" rel="index">
-                    <span itemprop="name">Web服务器环境搭建</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/01/22/WAMP环境搭建/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/22/WAMP环境搭建/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Windows-下安装WAMP"><a href="#Windows-下安装WAMP" class="headerlink" title="Windows 下安装WAMP"></a>Windows 下安装WAMP</h1><blockquote>
-<p>注：行数仅供参考，请结合自己实际的实际情况进行修改！</p>
-</blockquote>
-<h2 id="工具-原料"><a href="#工具-原料" class="headerlink" title="工具/原料"></a>工具/原料</h2><ol>
-<li><a href="https://www.apachelounge.com/download/VC14/binaries/httpd-2.4.23-win64-VC14.zip">Apache 2.4.23</a>  </li>
-<li><a href="http://windows.php.net/downloads/releases/php-7.0.9-Win32-VC14-x64.zip">php 7.0.9</a></li>
-<li><a href="http://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.14-winx64.zip">Mysql 5.7.14</a></li>
-</ol>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/22/WAMP环境搭建/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1482,7 +1479,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">20</span>
+              <span class="site-state-item-count">21</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1499,7 +1496,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
